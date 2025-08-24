@@ -1,15 +1,18 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Fira_Code } from "next/font/google";
 import "./globals.css";
+import Providers from "./providers";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+export const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+export const firaCode = Fira_Code({
   subsets: ["latin"],
+  variable: "--font-fira",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -23,11 +26,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+    <html lang='en'>
+      <body className={`${inter.variable} ${firaCode.variable} antialiased`}>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

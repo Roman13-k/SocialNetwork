@@ -1,5 +1,8 @@
-import React from "react";
+"use client";
+import { makeStore } from "@/store/store";
+import React, { PropsWithChildren } from "react";
+import { Provider } from "react-redux";
 
-export default function Providers() {
-  return <div>providers</div>;
+export default function Providers({ children }: PropsWithChildren) {
+  return <Provider store={makeStore()}>{children}</Provider>;
 }
