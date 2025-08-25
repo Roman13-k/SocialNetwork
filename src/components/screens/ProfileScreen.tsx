@@ -4,7 +4,7 @@ import MainContainer from "../ui/shared/containers/MainContainer";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import Image from "next/image";
 import { Button } from "../ui/shared/buttons/button";
-import { logoutUser } from "@/store/redusers/usersReducer";
+import { logoutUser } from "@/store/redusers/userReducer";
 import { redirect } from "next/navigation";
 
 export default function ProfileScreen() {

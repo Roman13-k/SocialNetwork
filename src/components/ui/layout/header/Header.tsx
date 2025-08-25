@@ -4,7 +4,7 @@ import UserNav from "./UserNav";
 import Nav from "./Nav";
 import LoginModal from "../../shared/modals/LoginModal";
 import { useAppDispatch } from "@/store/hooks";
-import { fetchSession } from "@/store/redusers/usersReducer";
+import { fetchSession } from "@/store/redusers/userReducer";
 
 export default function Header() {
   const [hover, setHover] = useState(false);

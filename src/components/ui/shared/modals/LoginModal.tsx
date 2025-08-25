@@ -3,7 +3,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import ModalContainer from "../containers/ModalContainer";
 import Image from "next/image";
 import { useAppDispatch } from "@/store/hooks";
-import { loginUser } from "@/store/redusers/usersReducer";
+import { loginUser } from "@/store/redusers/userReducer";
 import { LoginProviderType } from "@/types/login";
 
 export default function LoginModal({
