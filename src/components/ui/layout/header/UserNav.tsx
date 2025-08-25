@@ -6,14 +6,24 @@ import Link from "next/link";
 
 export default function UserNav({
   setLoginModal,
+  hover,
 }: {
   setLoginModal: Dispatch<SetStateAction<boolean>>;
+  hover: boolean;
 }) {
   const user = useAppSelector((state) => state.user.user);
   return (
     <div className='flex flex-col gap-3'>
-      <h2 className='text-text-primary text-[22px] font-medium'>
-        <Link href={"/"}>Twister</Link>
+      <h2 className='text-text-primary text-center font-medium'>
+        {hover ? (
+          <Link className='text-[22px]' href={"/"}>
+            Twister
+          </Link>
+        ) : (
+          <Link className='text-[32px] ' href={"/"}>
+            T
+          </Link>
+        )}
       </h2>
       <div className='flex gap-3 items-center'>
         {user == null ? (
@@ -29,9 +39,11 @@ export default function UserNav({
             />
           </Link>
         )}
-        <Button onClick={() => setLoginModal(true)} size={"lg"}>
-          Login
-        </Button>
+        {hover && (
+          <Button onClick={() => setLoginModal(true)} size={"lg"}>
+            Login
+          </Button>
+        )}
       </div>
     </div>
   );

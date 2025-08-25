@@ -16,31 +16,37 @@ export default function ProfileScreen() {
     redirect("/");
   };
 
-  if (loading) return <div>Loading...</div>;
-
-  if (!loading && !user) {
-    return <div>{error}</div>;
-  }
   return (
-    <MainContainer>
-      <section className='flex flex-col gap-10'>
-        <h1 className='text-text-primary text-[32px] '>Hi, {user?.user_metadata.name}</h1>
-        <div className='flex gap-5'>
-          <Image
-            src={user?.user_metadata.avatar_url ?? ""}
-            width={64}
-            height={64}
-            alt='profile'
-            className='rounded-full'
-          />
-          <ul>
-            <li></li>
-          </ul>
-        </div>
-        <Button variant={"dangerous"} onClick={handleExit}>
-          Exit
-        </Button>
-      </section>
+    <MainContainer className='h-[95dvh]'>
+      {loading ? (
+        <div>Loading...</div>
+      ) : !user ? (
+        <div>{error}</div>
+      ) : (
+        <section className='flex flex-col justify-start items-start gap-10 p-16 '>
+          <h1 className='text-text-primary text-[32px] '>Hi, {user?.user_metadata.name}</h1>
+          <div className='flex  gap-5'>
+            <Image
+              src={user?.user_metadata.avatar_url ?? ""}
+              width={196}
+              height={196}
+              alt='profile'
+              className='rounded-full'
+            />
+            <ul className='flex flex-col gap-3'>
+              <li>
+                <p className='text-[18px] font-medium'>
+                  <span className='text-text-primary'>Email: </span>
+                  <span className='text-text-secondary'>{user?.user_metadata.email}</span>
+                </p>
+              </li>
+            </ul>
+          </div>
+          <Button size={"lg"} variant={"dangerous"} onClick={handleExit}>
+            Exit
+          </Button>
+        </section>
+      )}
     </MainContainer>
   );
 }

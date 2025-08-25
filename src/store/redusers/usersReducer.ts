@@ -2,7 +2,6 @@ import { UserInterface } from "@/interfaces/user";
 import { supabase } from "@/lib/supabaseClient";
 import { LoginProviderType } from "@/types/login";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { User } from "@supabase/supabase-js";
 
 interface UserState {
   user: UserInterface | null;

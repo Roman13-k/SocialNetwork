@@ -31,9 +31,9 @@ export default function RootLayout({
     <html lang='en'>
       <body className={`${inter.variable} ${firaCode.variable} antialiased`}>
         <Providers>
-          <div className='flex'>
+          <div className='flex w-full'>
             <Header />
-            <div>
+            <div className='w-full'>
               <main>{children}</main> <Footer />
             </div>
           </div>
