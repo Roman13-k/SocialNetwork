@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter, Fira_Code } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
+import Footer from "@/components/ui/layout/footer/Footer";
+import Header from "@/components/ui/layout/header/Header";
 
 export const inter = Inter({
   subsets: ["latin"],
@@ -28,7 +30,14 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={`${inter.variable} ${firaCode.variable} antialiased`}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <div className='flex'>
+            <Header />
+            <div>
+              <main>{children}</main> <Footer />
+            </div>
+          </div>
+        </Providers>
       </body>
     </html>
   );
