@@ -1,28 +1,15 @@
 "use client";
 import React, { useEffect } from "react";
 import Post from "./Post";
-import { supabase } from "@/lib/supabaseClient";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { addPrevPosts } from "@/store/redusers/postsReduser";
+import { loadPosts } from "@/store/redusers/postsReduser";
 
 export default function Posts() {
   const posts = useAppSelector((state) => state.posts.posts);
   const dispatch = useAppDispatch();
 
-  const loadPosts = async () => {
-    const { data } = await supabase
-      .from("posts")
-      .select("*, likes(count), comments(count)")
-      .range(0, 5)
-      .order("created_at", { ascending: false });
-
-    if (data) {
-      dispatch(addPrevPosts(data));
-    }
-  };
-
   useEffect(() => {
-    loadPosts();
+    dispatch(loadPosts());
   }, []);
 
   useEffect(() => {
@@ -30,10 +17,12 @@ export default function Posts() {
   }, [posts]);
 
   return (
-    <section className='flex flex-col gap-10'>
-      {posts?.map((post) => (
-        <Post key={post.id} post={post} />
-      ))}
+    <section className='flex w-full justify-center'>
+      <ul className='flex flex-col gap-5'>
+        {posts?.map((post) => (
+          <Post key={post.id} post={post} />
+        ))}
+      </ul>
     </section>
   );
 }

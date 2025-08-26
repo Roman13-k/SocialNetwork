@@ -1,10 +1,10 @@
 "use cleint";
 import React, { Dispatch, SetStateAction } from "react";
-import ModalContainer from "../containers/ModalContainer";
 import Image from "next/image";
 import { useAppDispatch } from "@/store/hooks";
 import { loginUser } from "@/store/redusers/userReducer";
 import { LoginProviderType } from "@/types/login";
+import ModalContainer from "../../shared/containers/ModalContainer";
 
 export default function LoginModal({
   setLoginModal,

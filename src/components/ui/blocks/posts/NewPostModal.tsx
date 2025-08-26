@@ -1,7 +1,8 @@
 "use client";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import ModalContainer from "../../shared/containers/ModalContainer";
-import { Button } from "../../shared/buttons/button";
+import { Button } from "../../shared/button";
+import { Textarea } from "../../shared/textarea";
 
 interface NewPostModalProps {
   setPostModal: Dispatch<SetStateAction<boolean>>;
@@ -12,11 +13,11 @@ export default function NewPostModal({ setPostModal, handleNewPost }: NewPostMod
   const [content, setContent] = useState("");
   return (
     <ModalContainer onClose={() => setPostModal(false)}>
-      <p>New Post</p>
-      <textarea
-        className='border-border border rounded-md p-2'
+      <p className='text-[22px] font-medium text-text-primary'>New Post</p>
+      <Textarea
+        className='resize min-w-[200px] border-border border rounded-md p-2'
         value={content}
-        onChange={(e) => setContent(e.currentTarget.value)}></textarea>
+        onChange={(e) => setContent(e.currentTarget.value)}></Textarea>
       <Button variant={"secondary"} onClick={() => handleNewPost(content)}>
         Create
       </Button>

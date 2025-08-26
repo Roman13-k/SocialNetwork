@@ -2,9 +2,9 @@
 import React, { useEffect, useState } from "react";
 import UserNav from "./UserNav";
 import Nav from "./Nav";
-import LoginModal from "../../shared/modals/LoginModal";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchSession } from "@/store/redusers/userReducer";
+import LoginModal from "../../blocks/login/LoginModal";
 
 export default function Header() {
   const [hover, setHover] = useState(false);
@@ -18,10 +18,9 @@ export default function Header() {
     <>
       {loginModal && <LoginModal setLoginModal={setLoginModal} />}
       <header
-        className={`flex flex-col gap-10 py-5 px-4 bg-background-secondary border-border border-r border-y rounded-r-md min-h-screen w-[80px] hover:w-[260px] transition-all ${
-          hover ? "" : "delay-300"
-        } duration-300 overflow-hidden`}
-        onMouseEnter={() => setTimeout(() => setHover(true), 300)}
+        className={`flex flex-col gap-10 py-5 px-4 bg-background-secondary border-border border-r border-y rounded-r-md min-h-screen w-[80px] hover:w-[260px] transition-all   
+         duration-300 overflow-hidden`}
+        onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}>
         <UserNav hover={hover} setLoginModal={setLoginModal} />
         <Nav hover={hover} />

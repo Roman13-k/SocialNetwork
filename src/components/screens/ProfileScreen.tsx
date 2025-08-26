@@ -3,7 +3,7 @@ import React from "react";
 import MainContainer from "../ui/shared/containers/MainContainer";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import Image from "next/image";
-import { Button } from "../ui/shared/buttons/button";
+import { Button } from "../ui/shared/button";
 import { logoutUser } from "@/store/redusers/userReducer";
 import { redirect } from "next/navigation";
 
@@ -17,11 +17,11 @@ export default function ProfileScreen() {
   };
 
   return (
-    <MainContainer className='h-[95dvh]'>
+    <MainContainer className='min-h-[95dvh]'>
       {loading ? (
         <div>Loading...</div>
       ) : !user ? (
-        <div>{error}</div>
+        <p>{error}</p>
       ) : (
         <section className='flex flex-col justify-start items-start gap-10 p-16 '>
           <h1 className='text-text-primary text-[32px] '>Hi, {user?.user_metadata.name}</h1>

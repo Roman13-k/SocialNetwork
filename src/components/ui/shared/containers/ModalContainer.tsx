@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 
 interface ModalContainerProps {
   children: React.ReactNode;
@@ -6,6 +7,12 @@ interface ModalContainerProps {
 }
 
 export default function ModalContainer({ children, onClose }: ModalContainerProps) {
+  useEffect(() => {
+    document.body.classList.add("overflow-hidden");
+
+    return () => document.body.classList.remove("overflow-hidden");
+  }, []);
+
   return (
     <div
       onClick={onClose}
