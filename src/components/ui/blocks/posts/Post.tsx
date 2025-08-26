@@ -24,6 +24,30 @@ export default function Post({ post }: { post: PostInterface }) {
           </div>
 
           <p className='text-[16px] text-text-secondary'>{post.content}</p>
+          {post.image_url && post.image_url.length > 0 && (
+            <div
+              className={`
+              grid gap-2 max-w-[520px] max-h-[520px] w-full h-full
+              ${post.image_url.length === 1 ? "grid-cols-1 grid-rows-1" : ""}
+              ${post.image_url.length === 2 ? "grid-cols-2 grid-rows-1" : ""}
+              ${post.image_url.length === 3 ? "grid-cols-2 grid-rows-2" : ""}
+              `}>
+              {post.image_url.map((url, i) => (
+                <Image
+                  key={url}
+                  src={url}
+                  alt='post'
+                  width={520}
+                  height={520}
+                  className={`
+            object-cover rounded-2xl w-full h-full border-2 border-accent/15
+            ${post?.image_url?.length === 3 && i === 0 ? "col-span-2 row-span-2" : ""}
+            ${post?.image_url?.length === 3 && i > 0 ? "w-full h-full" : ""}
+          `}
+                />
+              ))}
+            </div>
+          )}
 
           <div className='flex gap-10 font-medium'>
             <LikeButton

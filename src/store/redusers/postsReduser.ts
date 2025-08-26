@@ -29,18 +29,19 @@ const postInformation = `
   ),
   liked_by_user:likes (
     user_id
-  )
+  ),
+  image_url
 `;
 
 export const createNewPost = createAsyncThunk<
   PostInterface[],
-  { content: string; userId: string },
+  { content: string; userId: string; image_url?: string[]; postId: string },
   { rejectValue: string }
->("posts/createNewPost", async ({ content, userId }, { rejectWithValue }) => {
+>("posts/createNewPost", async ({ content, userId, image_url, postId }, { rejectWithValue }) => {
   return tryCatchCover(async () => {
     const { data, error } = await supabase
       .from("posts")
-      .insert([{ content, user_id: userId }])
+      .insert([{ content, user_id: userId, image_url, id: postId }])
       .select(postInformation);
 
     if (error) throw error;
