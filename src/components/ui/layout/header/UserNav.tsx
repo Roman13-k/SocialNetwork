@@ -16,8 +16,9 @@ export default function UserNav({
     <div className='flex flex-col gap-3'>
       <h2 className='text-text-primary text-center font-medium'>
         {hover ? (
-          <Link className='text-[22px]' href={"/"}>
-            Twister
+          <Link className='text-[22px] flex gap-1 items-center' href={"/"}>
+            <Image src={"/phoenix.svg"} alt='phoenix' width={70} height={70} />
+            <span>Twister</span>
           </Link>
         ) : (
           <Link className='text-[32px] ' href={"/"}>
