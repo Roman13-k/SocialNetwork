@@ -16,12 +16,21 @@ const initialState: PostState = {
   error: null,
 };
 
-const postInformation = `id, content, created_at, likes(count), comments(count),
-          user:profiles  (
-            id,
-            username,
-            avatar_url
-          )`;
+const postInformation = `
+  id,
+  content,
+  created_at,
+  likes(count),
+  comments(count),
+  user:profiles (
+    id,
+    username,
+    avatar_url
+  ),
+  liked_by_user:likes (
+    user_id
+  )
+`;
 
 export const createNewPost = createAsyncThunk<
   PostInterface[],
@@ -35,7 +44,10 @@ export const createNewPost = createAsyncThunk<
       .select(postInformation);
 
     if (error) throw error;
-    return data;
+    return data.map((post) => ({
+      ...post,
+      liked_by_user: false,
+    }));
   }, rejectWithValue);
 });
 
@@ -50,21 +62,25 @@ export const deletePostById = createAsyncThunk<string, string, { rejectValue: st
   },
 );
 
-export const loadPosts = createAsyncThunk<PostInterface[], void, { rejectValue: string }>(
-  "posts/loadPosts",
-  async (_, { rejectWithValue }) => {
-    return await tryCatchCover(async () => {
-      const { data, error } = await supabase
-        .from("posts")
-        .select(postInformation)
-        .range(0, 5)
-        .order("created_at", { ascending: false });
+export const loadPosts = createAsyncThunk<
+  PostInterface[],
+  { userId: string },
+  { rejectValue: string }
+>("posts/loadPosts", async ({ userId }, { rejectWithValue }) => {
+  return await tryCatchCover(async () => {
+    const { data, error } = await supabase
+      .from("posts")
+      .select(postInformation)
+      .range(0, 5)
+      .order("created_at", { ascending: false });
 
-      if (error) throw error;
-      return data;
-    }, rejectWithValue);
-  },
-);
+    if (error) throw error;
+    return data.map((post) => ({
+      ...post,
+      liked_by_user: post.liked_by_user.some((like) => like.user_id === userId),
+    }));
+  }, rejectWithValue);
+});
 
 export const postsSlice = createSlice({
   name: "posts",

@@ -1,7 +1,7 @@
 "use client";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import ModalContainer from "../../shared/containers/ModalContainer";
-import { Button } from "../../shared/button";
+import { Button } from "../../shared/buttons/button";
 import { Textarea } from "../../shared/textarea";
 
 interface NewPostModalProps {

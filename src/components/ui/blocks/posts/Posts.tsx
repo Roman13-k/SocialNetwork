@@ -6,11 +6,13 @@ import { loadPosts } from "@/store/redusers/postsReduser";
 
 export default function Posts() {
   const posts = useAppSelector((state) => state.posts.posts);
+  const userId = useAppSelector((state) => state.user.user?.id);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(loadPosts());
-  }, []);
+    if (!userId) return;
+    dispatch(loadPosts({ userId }));
+  }, [userId]);
 
   useEffect(() => {
     console.log(posts);

@@ -1,6 +1,6 @@
 "use client";
 import React, { Dispatch, SetStateAction } from "react";
-import { Button } from "../../shared/button";
+import { Button } from "../../shared/buttons/button";
 import { useAppSelector } from "@/store/hooks";
 
 export default function NewPost({

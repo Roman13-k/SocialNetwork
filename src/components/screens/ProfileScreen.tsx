@@ -3,7 +3,7 @@ import React from "react";
 import MainContainer from "../ui/shared/containers/MainContainer";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import Image from "next/image";
-import { Button } from "../ui/shared/button";
+import { Button } from "../ui/shared/buttons/button";
 import { logoutUser } from "@/store/redusers/userReducer";
 import { redirect } from "next/navigation";
 

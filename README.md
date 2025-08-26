@@ -7,6 +7,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 - [Next.js 14](https://nextjs.org) (App Router)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/) UI lib
 - [Supabase](https://supabase.com/) as backend & database
 - [pnpm](https://pnpm.io) as package manager
 

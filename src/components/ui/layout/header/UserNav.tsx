@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect } from "react";
-import { Button } from "../../shared/button";
+import { Button } from "../../shared/buttons/button";
 import { useAppSelector } from "@/store/hooks";
 import Image from "next/image";
 import Link from "next/link";
