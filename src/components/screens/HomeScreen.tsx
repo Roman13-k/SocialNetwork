@@ -6,7 +6,7 @@ import NewPost from "../ui/blocks/posts/NewPost";
 import Intro from "../ui/blocks/Intro";
 import NewPostModal from "../ui/blocks/posts/NewPostModal";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { createNewPost, deletePostById } from "@/store/redusers/postsReduser";
+import { createNewPost, deletePostById, setLoading } from "@/store/redusers/postsReduser";
 import { supabase } from "@/lib/supabaseClient";
 
 export default function HomeScreen() {
@@ -35,6 +35,7 @@ export default function HomeScreen() {
   const handleNewPost = async (content: string, files?: File[]) => {
     if (!content.trim() || !userId) return;
 
+    dispatch(setLoading());
     const postId = crypto.randomUUID();
     const image_url = await uploadPostsImages(postId, files);
     dispatch(createNewPost({ content, userId, image_url, postId }));

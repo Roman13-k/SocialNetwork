@@ -1,10 +1,11 @@
 "use client";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import ModalContainer from "../../shared/containers/ModalContainer";
 import { Button } from "../../shared/buttons/button";
 import { Textarea } from "../../shared/textarea";
 import { Input } from "../../shared/input";
 import { useAppSelector } from "@/store/hooks";
+import P from "../../shared/text/P";
 
 interface NewPostModalProps {
   setPostModal: Dispatch<SetStateAction<boolean>>;
@@ -37,6 +38,10 @@ export default function NewPostModal({ setPostModal, handleNewPost }: NewPostMod
     setFiles(selectedFiles);
   };
 
+  useEffect(() => {
+    console.log(loading);
+  }, [loading]);
+
   return (
     <ModalContainer onClose={() => setPostModal(false)}>
       <p className='text-[22px] font-medium text-text-primary'>New Post</p>
@@ -48,12 +53,17 @@ export default function NewPostModal({ setPostModal, handleNewPost }: NewPostMod
       />
 
       <Input type='file' accept='image/*' multiple onChange={handleValidateFiles} />
-      {error && <p className='text-red-500 text-sm'>{error}</p>}
+      {error && <P variant={"error"}>{error}</P>}
 
       <Button
-        variant={"secondary"}
+        className='w-[130px] flex justify-center items-center gap-2'
+        size='lg'
+        variant='secondary'
         onClick={() => handleNewPost(content, files)}
         disabled={!!error || !content.trim() || loading}>
+        {loading && (
+          <span className='w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin'></span>
+        )}
         Create
       </Button>
     </ModalContainer>

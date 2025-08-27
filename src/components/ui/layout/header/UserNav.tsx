@@ -3,6 +3,7 @@ import { Button } from "../../shared/buttons/button";
 import { useAppSelector } from "@/store/hooks";
 import Image from "next/image";
 import Link from "next/link";
+import { Skeleton } from "../../shared/skeletons/skeleton";
 
 export default function UserNav({
   setLoginModal,
@@ -11,7 +12,7 @@ export default function UserNav({
   setLoginModal: Dispatch<SetStateAction<boolean>>;
   hover: boolean;
 }) {
-  const user = useAppSelector((state) => state.user.user);
+  const { user, loading } = useAppSelector((state) => state.user);
   return (
     <div className='flex flex-col gap-3'>
       <h2 className='text-text-primary text-center font-medium'>
@@ -27,7 +28,9 @@ export default function UserNav({
         )}
       </h2>
       <div className='flex gap-3 items-center'>
-        {user == null ? (
+        {loading ? (
+          <Skeleton className='h-[44px] w-[44px] rounded-full' />
+        ) : user == null ? (
           <Image src={"/user.png"} width={64} height={64} alt='profile' />
         ) : (
           <Link href={"/profile"}>

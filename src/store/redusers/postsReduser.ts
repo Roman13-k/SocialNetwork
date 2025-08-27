@@ -2,7 +2,6 @@ import { PostInterface } from "@/interfaces/post";
 import { supabase } from "@/lib/supabaseClient";
 import { addAsyncCase } from "@/utils/addAsyncCase";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { tryCatchCover } from "@/utils/tryCatchCover";
 
 interface PostState {
   posts: PostInterface[];
@@ -38,37 +37,42 @@ export const createNewPost = createAsyncThunk<
   { content: string; userId: string; image_url?: string[]; postId: string },
   { rejectValue: string }
 >("posts/createNewPost", async ({ content, userId, image_url, postId }, { rejectWithValue }) => {
-  return tryCatchCover(async () => {
+  try {
     const { data, error } = await supabase
       .from("posts")
       .insert([{ content, user_id: userId, image_url, id: postId }])
       .select(postInformation);
 
     if (error) throw error;
+
     return data.map((post) => ({
       ...post,
       liked_by_user: false,
     }));
-  }, rejectWithValue);
+  } catch (err) {
+    return rejectWithValue((err as Error).message);
+  }
 });
 
 export const deletePostById = createAsyncThunk<string, string, { rejectValue: string }>(
   "posts/deletePost",
   async (postId, { rejectWithValue }) => {
-    return await tryCatchCover(async () => {
+    try {
       const { error } = await supabase.from("posts").delete().eq("id", postId);
       if (error) throw error;
       return postId;
-    }, rejectWithValue);
+    } catch (err) {
+      return rejectWithValue((err as Error).message);
+    }
   },
 );
 
 export const loadPosts = createAsyncThunk<
   PostInterface[],
-  { userId: string },
+  { userId?: string },
   { rejectValue: string }
 >("posts/loadPosts", async ({ userId }, { rejectWithValue }) => {
-  return await tryCatchCover(async () => {
+  try {
     const { data, error } = await supabase
       .from("posts")
       .select(postInformation)
@@ -76,28 +80,37 @@ export const loadPosts = createAsyncThunk<
       .order("created_at", { ascending: false });
 
     if (error) throw error;
+
     return data.map((post) => ({
       ...post,
-      liked_by_user: post.liked_by_user.some((like) => like.user_id === userId),
+      liked_by_user: userId ? post.liked_by_user.some((like) => like.user_id === userId) : false,
     }));
-  }, rejectWithValue);
+  } catch (err) {
+    return rejectWithValue((err as Error).message);
+  }
 });
 
 export const postsSlice = createSlice({
   name: "posts",
   initialState,
-  reducers: {},
+  reducers: {
+    setLoading: (state) => {
+      state.loading = true;
+    },
+  },
   extraReducers: (builder) => {
     addAsyncCase(builder, createNewPost, (state, action) => {
       state.posts = [...action.payload, ...state.posts];
-    }),
-      addAsyncCase(builder, loadPosts, (state, action) => {
-        state.posts = [...state.posts, ...action.payload];
-      });
+    });
+    addAsyncCase(builder, loadPosts, (state, action) => {
+      state.posts = [...state.posts, ...action.payload];
+    });
     addAsyncCase(builder, deletePostById, (state, action) => {
       state.posts = state.posts.filter((post) => post.id !== action.payload);
     });
   },
 });
+
+export const { setLoading } = postsSlice.actions;
 
 export default postsSlice.reducer;

@@ -12,6 +12,7 @@ const buttonVariants = cva(
         dangerous: "bg-red-500 text-white shadow-xs hover:bg-red-500/90 cursor-pointer",
         destructive: "bg-accent/80 text-white shadow-xs",
         secondary: "bg-button text-text-primary shadow-xs hover:bg-button/80 cursor-pointer",
+        outline: "bg-background-primary text-text-primary cursor-pointer",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
@@ -32,36 +33,13 @@ function Button({
   variant,
   size,
   asChild = false,
-  disabledMessage,
   disabled,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
-    disabledMessage?: string;
   }) {
   const Comp = asChild ? Slot : "button";
-
-  if (disabled && disabledMessage) {
-    return (
-      <div className='relative group inline-block'>
-        <Comp
-          data-slot='button'
-          className={cn(buttonVariants({ variant, size, className }))}
-          disabled
-          {...props}
-        />
-        <span
-          className='absolute -bottom-10 left-2
-          bg-gray-800 text-white text-xs rounded px-2 py-1
-          opacity-0 group-hover:opacity-100 transition-opacity
-          pointer-events-none
-        '>
-          {disabledMessage}
-        </span>
-      </div>
-    );
-  }
 
   return (
     <Comp

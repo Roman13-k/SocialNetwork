@@ -2,7 +2,6 @@ import { UserInterface } from "@/interfaces/user";
 import { supabase } from "@/lib/supabaseClient";
 import { LoginProviderType } from "@/types/login";
 import { addAsyncCase } from "@/utils/addAsyncCase";
-import { tryCatchCover } from "@/utils/tryCatchCover";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface UserState {
@@ -13,7 +12,7 @@ interface UserState {
 
 const initialState: UserState = {
   user: null,
-  loading: false,
+  loading: true,
   error: null,
 };
 
@@ -22,13 +21,17 @@ export const loginUser = createAsyncThunk<
   LoginProviderType,
   { rejectValue: string }
 >("user/loginUser", async (provider, { rejectWithValue }) => {
-  return tryCatchCover(async () => {
+  try {
     const { error } = await supabase.auth.signInWithOAuth({ provider });
     if (error) throw error;
 
-    const { data: sessionData } = await supabase.auth.getUser();
+    const { data: sessionData, error: userError } = await supabase.auth.getUser();
+    if (userError) throw userError;
     return sessionData.user ?? null;
-  }, rejectWithValue);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Error";
+    return rejectWithValue(message);
+  }
 });
 
 export const fetchSession = createAsyncThunk<UserInterface | null, void, { rejectValue: string }>(
