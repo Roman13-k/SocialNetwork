@@ -8,7 +8,7 @@ export interface UserInterface {
   app_metadata: {
     provider?: LoginProviderType | string;
     providers?: (LoginProviderType | string)[];
-    [key: string]: any;
+    [key: string]: unknown;
   };
   user_metadata: {
     avatar_url?: string;
@@ -21,7 +21,7 @@ export interface UserInterface {
     picture?: string;
     provider_id?: string;
     sub?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   };
   is_anonymous?: boolean;
 }

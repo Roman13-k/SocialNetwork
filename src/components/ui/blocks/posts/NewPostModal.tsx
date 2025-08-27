@@ -1,5 +1,5 @@
 "use client";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import ModalContainer from "../../shared/containers/ModalContainer";
 import { Button } from "../../shared/buttons/button";
 import { Textarea } from "../../shared/textarea";
@@ -37,10 +37,6 @@ export default function NewPostModal({ setPostModal, handleNewPost }: NewPostMod
     setError(null);
     setFiles(selectedFiles);
   };
-
-  useEffect(() => {
-    console.log(loading);
-  }, [loading]);
 
   return (
     <ModalContainer onClose={() => setPostModal(false)}>

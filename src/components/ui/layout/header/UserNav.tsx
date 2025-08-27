@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { Button } from "../../shared/buttons/button";
 import { useAppSelector } from "@/store/hooks";
 import Image from "next/image";

@@ -12,17 +12,18 @@ export function useObserver(
     if (observer.current) {
       observer.current.disconnect();
     }
+    const element = ref.current;
 
     observer.current = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
         callback();
       }
     });
-    observer.current.observe(ref.current);
+    observer.current.observe(element);
 
     return () => {
-      if (observer.current && ref.current) {
-        observer.current.unobserve(ref.current);
+      if (observer.current && element) {
+        observer.current.unobserve(element);
       }
     };
   }, [ref, callback, loading]);

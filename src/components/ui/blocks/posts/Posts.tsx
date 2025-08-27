@@ -14,15 +14,10 @@ export default function Posts() {
   const divRef = useRef<HTMLDivElement | null>(null);
 
   const loadMore = () => {
-    if (!postLoading && offset !== null) {
+    if (!postLoading && offset !== null && !loading) {
       dispatch(loadPosts({ userId: user?.id, offset }));
     }
   };
-
-  useEffect(() => {
-    if (loading) return;
-    dispatch(loadPosts({ userId: user?.id, offset }));
-  }, [loading]);
 
   useObserver(loadMore, loading, divRef);
 

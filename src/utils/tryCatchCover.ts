@@ -1,6 +1,6 @@
 export async function tryCatchCover<T>(
   callback: () => Promise<T>,
-  rejectWithValue: (value: string) => any,
+  rejectWithValue: (value: string) => unknown,
 ): Promise<T | ReturnType<typeof rejectWithValue>> {
   try {
     return await callback();

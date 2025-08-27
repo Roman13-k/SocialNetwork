@@ -54,6 +54,7 @@ export const createNewPost = createAsyncThunk<
     return data.map((post) => ({
       ...post,
       liked_by_user: false,
+      user: Array.isArray(post.user) ? post.user[0] : post.user,
     }));
   } catch (err) {
     return rejectWithValue((err as Error).message);
@@ -78,7 +79,7 @@ export const loadPosts = createAsyncThunk<
   { userId?: string; offset: number | null },
   { rejectValue: string }
 >("posts/loadPosts", async ({ userId, offset }, { rejectWithValue }) => {
-  if (offset === null) return;
+  if (offset === null) return rejectWithValue("Offset is null");
   try {
     const { data, error } = await supabase
       .from("posts")
@@ -90,6 +91,7 @@ export const loadPosts = createAsyncThunk<
     return data.map((post) => ({
       ...post,
       liked_by_user: userId ? post.liked_by_user.some((like) => like.user_id === userId) : false,
+      user: Array.isArray(post.user) ? post.user[0] : post.user,
     }));
   } catch (err) {
     return rejectWithValue((err as Error).message);
