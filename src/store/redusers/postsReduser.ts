@@ -3,16 +3,20 @@ import { supabase } from "@/lib/supabaseClient";
 import { addAsyncCase } from "@/utils/addAsyncCase";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
+const limit = 5;
+
 interface PostState {
   posts: PostInterface[];
   loading: boolean;
   error: string | null;
+  offset: number | null;
 }
 
 const initialState: PostState = {
   posts: [],
   loading: false,
   error: null,
+  offset: 0,
 };
 
 const postInformation = `
@@ -31,6 +35,8 @@ const postInformation = `
   ),
   image_url
 `;
+
+//! какая-то ошибка в типах, но всё работает
 
 export const createNewPost = createAsyncThunk<
   PostInterface[],
@@ -69,16 +75,16 @@ export const deletePostById = createAsyncThunk<string, string, { rejectValue: st
 
 export const loadPosts = createAsyncThunk<
   PostInterface[],
-  { userId?: string },
+  { userId?: string; offset: number | null },
   { rejectValue: string }
->("posts/loadPosts", async ({ userId }, { rejectWithValue }) => {
+>("posts/loadPosts", async ({ userId, offset }, { rejectWithValue }) => {
+  if (offset === null) return;
   try {
     const { data, error } = await supabase
       .from("posts")
       .select(postInformation)
-      .range(0, 5)
+      .range(offset, offset + limit - 1)
       .order("created_at", { ascending: false });
-
     if (error) throw error;
 
     return data.map((post) => ({
@@ -103,7 +109,12 @@ export const postsSlice = createSlice({
       state.posts = [...action.payload, ...state.posts];
     });
     addAsyncCase(builder, loadPosts, (state, action) => {
-      state.posts = [...state.posts, ...action.payload];
+      if (action.payload.length === 0) {
+        state.offset = null;
+      } else if (state.offset !== null) {
+        state.posts.push(...action.payload);
+        state.offset += limit;
+      }
     });
     addAsyncCase(builder, deletePostById, (state, action) => {
       state.posts = state.posts.filter((post) => post.id !== action.payload);
