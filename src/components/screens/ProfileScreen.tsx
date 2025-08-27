@@ -13,6 +13,15 @@ export default function ProfileScreen() {
   const { user, loading, error } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
+  //! сделать полное удаление аккаунта
+
+  const userInfo = [
+    { name: "Email: ", value: user?.user_metadata.email },
+    { name: "Count of posts: ", value: user?.stats.posts_count },
+    { name: "Count of likes: ", value: user?.stats.likes_count },
+    { name: "Count of comments: ", value: user?.stats.comments_count },
+  ];
+
   const handleExit = () => {
     dispatch(logoutUser());
     redirect("/");
@@ -47,15 +56,20 @@ export default function ProfileScreen() {
                   className='rounded-full'
                 />
                 <ul className='flex flex-col gap-3'>
-                  <li>
-                    <p className='text-[18px] font-medium'>
-                      <span className='text-text-primary'>Email: </span>
-                      <span className='text-text-secondary'>{user?.user_metadata.email}</span>
-                    </p>
-                  </li>
+                  {userInfo.map((inf, index) => (
+                    <li key={index}>
+                      <p className='text-[18px] font-medium'>
+                        <span className='text-text-primary'>{inf.name}</span>
+                        <span className='text-text-secondary'>{inf.value}</span>
+                      </p>
+                    </li>
+                  ))}
                 </ul>
               </div>
-              <DeleteDialog handleExit={handleExit} />
+              <DeleteDialog
+                handleAction={handleExit}
+                description='You will be logged out of your account.'
+              />
             </>
           )}
         </section>

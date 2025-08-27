@@ -30,3 +30,7 @@
   --font-sans: "Inter", sans-serif;
   --font-mono: "Fira Code", monospace;
 }
+
+li {
+  list-style: none;
+}

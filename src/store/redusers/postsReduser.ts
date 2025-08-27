@@ -36,8 +36,6 @@ const postInformation = `
   image_url
 `;
 
-//! какая-то ошибка в типах, но всё работает
-
 export const createNewPost = createAsyncThunk<
   PostInterface[],
   { content: string; userId: string; image_url?: string[]; postId: string },
@@ -61,18 +59,27 @@ export const createNewPost = createAsyncThunk<
   }
 });
 
-export const deletePostById = createAsyncThunk<string, string, { rejectValue: string }>(
-  "posts/deletePost",
-  async (postId, { rejectWithValue }) => {
-    try {
-      const { error } = await supabase.from("posts").delete().eq("id", postId);
-      if (error) throw error;
-      return postId;
-    } catch (err) {
-      return rejectWithValue((err as Error).message);
+export const deletePostById = createAsyncThunk<
+  string,
+  { postId: string; image_url: string[] | undefined },
+  { rejectValue: string }
+>("posts/deletePost", async ({ postId, image_url }, { rejectWithValue }) => {
+  try {
+    if (image_url && image_url?.length !== 0) {
+      for (let url of image_url) {
+        const parts = url.split("/public/posts-images/");
+        await supabase.storage.from("posts-images").remove([parts[1]]);
+      }
     }
-  },
-);
+
+    const { error } = await supabase.from("posts").delete().eq("id", postId);
+    if (error) throw error;
+
+    return postId;
+  } catch (err) {
+    return rejectWithValue((err as Error).message);
+  }
+});
 
 export const loadPosts = createAsyncThunk<
   PostInterface[],

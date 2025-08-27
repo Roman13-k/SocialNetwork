@@ -24,4 +24,17 @@ export interface UserInterface {
     [key: string]: unknown;
   };
   is_anonymous?: boolean;
+  stats: UserStats;
+}
+
+export interface UserStats {
+  posts_count: number;
+  likes_count: number;
+  comments_count: number;
+}
+
+export interface UserMainInfo {
+  id: string;
+  username: string;
+  avatar_url: string;
 }

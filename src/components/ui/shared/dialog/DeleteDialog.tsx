@@ -13,26 +13,32 @@ import {
 import { Button } from "../buttons/button";
 
 interface DeleteDialogProps {
-  handleExit: () => void;
+  handleAction: () => void;
+  trigerText?: string;
+  description?: string;
 }
 
-export default function DeleteDialog({ handleExit }: DeleteDialogProps) {
+export default function DeleteDialog({
+  handleAction,
+  trigerText = "Exit",
+  description = "This action cannot be undone",
+}: DeleteDialogProps) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button size={"lg"} variant={"dangerous"}>
-          Exit
+          {trigerText}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>You will be logged out of your account.</AlertDialogDescription>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction variant={"dangerous"} onClick={handleExit}>
-            Exit
+          <AlertDialogAction variant={"dangerous"} onClick={handleAction}>
+            {trigerText}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

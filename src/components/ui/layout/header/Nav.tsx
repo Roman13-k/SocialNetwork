@@ -1,5 +1,6 @@
 import { navData } from "@/utils/nav";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 export default function Nav({ hover }: { hover: boolean }) {
@@ -10,9 +11,9 @@ export default function Nav({ hover }: { hover: boolean }) {
           <li className='flex gap-2 items-center' key={index}>
             <Image src={item.icon} alt='' width={30} height={30} />
             {hover && (
-              <a className='text-text-secondary hover:text-accent' href={item.href}>
+              <Link className='text-text-secondary hover:text-accent' href={item.href}>
                 {item.label}
-              </a>
+              </Link>
             )}
           </li>
         ))}

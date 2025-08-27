@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import Post from "./Post";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { loadPosts } from "@/store/redusers/postsReduser";
@@ -20,10 +20,6 @@ export default function Posts() {
   };
 
   useObserver(loadMore, loading, divRef);
-
-  useEffect(() => {
-    console.log(posts);
-  }, [posts]);
 
   return (
     <section className='flex flex-col w-full items-center justify-center'>

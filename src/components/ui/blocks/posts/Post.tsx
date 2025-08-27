@@ -7,11 +7,23 @@ import LikeButton from "../../shared/buttons/LikeButton";
 import Link from "next/link";
 import CommentButton from "../../shared/buttons/CommentButton";
 import NewCommentModal from "../comments/NewCommentModal";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { createNewComment } from "@/store/redusers/commentsReduser";
 
 export default function Post({ post }: { post: PostInterface }) {
   const [commentModal, setCommentModal] = useState(false);
+  const [commentsCount, setCommentsCount] = useState(post.comments[0].count);
+  const dispatch = useAppDispatch();
+  const commentError = useAppSelector((state) => state.comments.error);
 
-  const handleNewComment = (content: string) => {};
+  const handleNewComment = async (content: string) => {
+    await dispatch(createNewComment({ content, user_id: post.user.id, post_id: post.id }));
+    if (!commentError) {
+      setCommentsCount((prev) => prev + 1);
+      setCommentModal(false);
+    }
+  };
+
   return (
     <>
       <li className='px-5 py-3 border-border border rounded-md w-[700px] transition-all hover:bg-background-secondary/80 cursor-pointer'>
@@ -62,7 +74,7 @@ export default function Post({ post }: { post: PostInterface }) {
                 count={post.likes[0].count}
                 liked_by_user={post.liked_by_user}
               />
-              <CommentButton setCommentModal={setCommentModal} count={post.comments[0].count} />
+              <CommentButton setCommentModal={setCommentModal} count={commentsCount} />
             </div>
           </div>
         </Link>
