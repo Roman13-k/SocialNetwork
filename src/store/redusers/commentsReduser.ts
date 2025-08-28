@@ -19,15 +19,28 @@ const initialState: commentsState = {
 
 const limit = 5;
 
+const commentInformation = `*,  
+        user:profiles (
+            id,
+            username,
+            avatar_url
+        )`;
+
 export const createNewComment = createAsyncThunk<
-  void,
+  CommentInterface,
   { user_id: string; content: string; post_id: string },
   { rejectValue: string }
 >("comments/createNewComment", async ({ user_id, content, post_id }, { rejectWithValue }) => {
   try {
-    const { error } = await supabase.from("comments").insert([{ user_id, content, post_id }]);
+    const { error, data } = await supabase
+      .from("comments")
+      .insert([{ user_id, content, post_id }])
+      .select(commentInformation)
+      .single();
 
     if (error) throw error;
+
+    return data;
   } catch (error) {
     return rejectWithValue((error as Error).message);
   }
@@ -37,7 +50,7 @@ export const deleteCommentById = createAsyncThunk<string, string, { rejectValue:
   "comments/deleteCommentById",
   async (commentId, { rejectWithValue }) => {
     try {
-      const { error } = await supabase.from("posts").delete().eq("id", commentId);
+      const { error } = await supabase.from("comments").delete().eq("id", commentId);
       if (error) throw error;
       return commentId;
     } catch (err) {
@@ -48,21 +61,15 @@ export const deleteCommentById = createAsyncThunk<string, string, { rejectValue:
 
 export const loadComments = createAsyncThunk<
   CommentInterface[],
-  { offset: number | null },
+  { offset: number | null; postId: string },
   { rejectValue: string }
->("comments/loadComments", async ({ offset }, { rejectWithValue }) => {
+>("comments/loadComments", async ({ offset, postId }, { rejectWithValue }) => {
   if (offset === null) return rejectWithValue("Offset is null");
   try {
     const { data, error } = await supabase
       .from("comments")
-      .select(
-        `*,  
-        user:profiles (
-            id,
-            username,
-            avatar_url
-        )`,
-      )
+      .select(commentInformation)
+      .eq("post_id", postId)
       .range(offset, offset + limit - 1)
       .order("created_at", { ascending: false });
     if (error) throw error;
@@ -76,9 +83,18 @@ export const loadComments = createAsyncThunk<
 export const commentsSlice = createSlice({
   name: "comments",
   initialState,
-  reducers: {},
+  reducers: {
+    resetComments: (state) => {
+      state.comments = [];
+      state.offset = 0;
+    },
+  },
   extraReducers: (builder) => {
-    addAsyncCase(builder, createNewComment, () => {});
+    addAsyncCase(builder, createNewComment, (state, action) => {
+      if (state.comments.length != 0) {
+        state.comments.unshift(action.payload);
+      }
+    });
     addAsyncCase(builder, deleteCommentById, (state, action) => {
       state.comments = state.comments.filter((comment: any) => comment.id !== action.payload);
     });
@@ -93,6 +109,6 @@ export const commentsSlice = createSlice({
   },
 });
 
-export const {} = commentsSlice.actions;
+export const { resetComments } = commentsSlice.actions;
 
 export default commentsSlice.reducer;

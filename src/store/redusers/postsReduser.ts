@@ -16,7 +16,7 @@ interface PostState {
 const initialState: PostState = {
   posts: [],
   currentPost: {} as PostInterface,
-  loading: true,
+  loading: false,
   error: null,
   offset: 0,
 };

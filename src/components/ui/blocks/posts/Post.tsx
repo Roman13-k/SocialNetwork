@@ -12,7 +12,7 @@ import { createNewComment } from "@/store/redusers/commentsReduser";
 
 export default function Post({ post }: { post: PostInterface }) {
   const [commentModal, setCommentModal] = useState(false);
-  const [commentsCount, setCommentsCount] = useState(post.comments[0].count);
+  const [commentsCount, setCommentsCount] = useState<number>(post?.comments?.[0]?.count ?? 0);
   const dispatch = useAppDispatch();
   const commentError = useAppSelector((state) => state.comments.error);
   const userId = useAppSelector((state) => state.user.user?.id);
@@ -31,7 +31,7 @@ export default function Post({ post }: { post: PostInterface }) {
       <li className='px-5 py-3 border-border border rounded-md w-[700px] transition-all hover:bg-background-secondary/80 cursor-pointer'>
         <Link className='flex items-start' href={`/post/${post.id}`}>
           <Image
-            src={post.user.avatar_url}
+            src={post?.user?.avatar_url ?? "/"}
             alt=''
             width={40}
             height={40}
@@ -39,12 +39,12 @@ export default function Post({ post }: { post: PostInterface }) {
           />
           <div className='flex flex-col gap-2'>
             <div className='flex gap-2 text-[17px]'>
-              <strong className='text-text-primary'>{post.user.username}</strong>
-              <p className='text-text-secondary'>· {postDateFormat(post.created_at)}</p>
+              <strong className='text-text-primary'>{post?.user?.username}</strong>
+              <p className='text-text-secondary'>· {postDateFormat(post?.created_at)}</p>
             </div>
 
-            <p className='text-[16px] text-text-secondary'>{post.content}</p>
-            {post.image_url && post.image_url.length > 0 && (
+            <p className='text-[16px] text-text-secondary'>{post?.content}</p>
+            {post?.image_url && post?.image_url?.length > 0 && (
               <div
                 className={`
               grid gap-2 max-w-[520px] max-h-[520px] w-full h-full
@@ -73,8 +73,8 @@ export default function Post({ post }: { post: PostInterface }) {
               <LikeButton
                 user_id={userId}
                 post_id={post.id}
-                count={post.likes[0].count}
-                liked_by_user={post.liked_by_user}
+                count={post?.likes?.[0].count}
+                liked_by_user={post?.liked_by_user}
               />
               <CommentButton setCommentModal={setCommentModal} count={commentsCount} />
             </div>

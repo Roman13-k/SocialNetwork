@@ -8,7 +8,6 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import P from "../ui/shared/text/P";
 import Link from "next/link";
 import { deletePostById, getPostById } from "@/store/redusers/postsReduser";
-import { deleteCommentById } from "@/store/redusers/commentsReduser";
 import DeleteDialog from "../ui/shared/dialog/DeleteDialog";
 import PostSkeleton from "../ui/shared/skeletons/PostSkeleton";
 
@@ -25,7 +24,7 @@ export default function PostScreen() {
     }
   }, [params.id, user?.id, dispatch]);
 
-  if (!currentPost && !loading)
+  if ((!currentPost && !loading) || !params.id || Array.isArray(params.id))
     return (
       <MainContainer className='min-h-[90dvh]'>
         <P variant={"error"}>Post By Id {params.id} not found</P>
@@ -35,10 +34,6 @@ export default function PostScreen() {
   const handleDeletePost = () => {
     dispatch(deletePostById({ postId: currentPost.id, image_url: currentPost.image_url }));
     redirect("/");
-  };
-
-  const hadleDeleteComment = (commentId: string) => {
-    dispatch(deleteCommentById(commentId));
   };
 
   return (
@@ -60,7 +55,7 @@ export default function PostScreen() {
             )}
           </div>
         )}
-        <Comments />
+        <Comments postId={params.id} />
       </div>
     </MainContainer>
   );

@@ -1,22 +1,29 @@
 "use client";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import Comment from "./Comment";
 import { useObserver } from "@/hooks/useObserver";
-import { loadComments } from "@/store/redusers/commentsReduser";
+import { loadComments, resetComments } from "@/store/redusers/commentsReduser";
+import CommentSkeleton from "../../shared/skeletons/CommentSkeleton";
 
-export default function Comments() {
+export default function Comments({ postId }: { postId: string }) {
   const divRef = useRef<HTMLDivElement | null>(null);
   const { comments, loading, offset } = useAppSelector((state) => state.comments);
   const dispatch = useAppDispatch();
 
   const loadMoreComments = () => {
     if (offset !== null && !loading) {
-      dispatch(loadComments({ offset }));
+      dispatch(loadComments({ offset, postId }));
     }
   };
 
   useObserver(loadMoreComments, loading, divRef);
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetComments());
+    };
+  }, []);
 
   return (
     <section className='flex flex-col'>
@@ -25,6 +32,12 @@ export default function Comments() {
           <Comment key={comment.id} comment={comment} />
         ))}
       </ul>
+      {loading && (
+        <div className='flex flex-col gap-4'>
+          <CommentSkeleton />
+          <CommentSkeleton />
+        </div>
+      )}
       <div ref={divRef} className='block w-[200px] h-4'></div>
     </section>
   );

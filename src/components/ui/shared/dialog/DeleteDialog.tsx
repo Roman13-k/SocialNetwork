@@ -14,6 +14,7 @@ import { Button } from "../buttons/button";
 
 interface DeleteDialogProps {
   handleAction: () => void;
+  triger?: React.ReactNode;
   trigerText?: string;
   description?: string;
 }
@@ -22,13 +23,18 @@ export default function DeleteDialog({
   handleAction,
   trigerText = "Exit",
   description = "This action cannot be undone",
+  triger,
 }: DeleteDialogProps) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button size={"lg"} variant={"dangerous"}>
-          {trigerText}
-        </Button>
+        {triger ? (
+          triger
+        ) : (
+          <Button size={"lg"} variant={"dangerous"}>
+            {trigerText}
+          </Button>
+        )}
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
