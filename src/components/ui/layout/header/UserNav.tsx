@@ -4,6 +4,7 @@ import { useAppSelector } from "@/store/hooks";
 import Image from "next/image";
 import Link from "next/link";
 import { Skeleton } from "../../shared/skeletons/skeleton";
+import { H2 } from "../../shared/text/H";
 
 export default function UserNav({
   setLoginModal,
@@ -15,18 +16,16 @@ export default function UserNav({
   const { user, loading } = useAppSelector((state) => state.user);
   return (
     <div className='flex flex-col gap-3'>
-      <h2 className='text-text-primary text-center font-medium'>
+      <H2 className='text-center'>
         {hover ? (
-          <Link className='text-[22px] flex gap-1 items-center' href={"/"}>
+          <Link className='flex gap-1 items-center' href={"/"}>
             <Image src={"/phoenix.svg"} alt='phoenix' width={70} height={70} />
             <span>Twister</span>
           </Link>
         ) : (
-          <Link className='text-[32px] ' href={"/"}>
-            T
-          </Link>
+          <Link href={"/"}>T</Link>
         )}
-      </h2>
+      </H2>
       <div className='flex gap-3 items-center'>
         {loading ? (
           <Skeleton className='h-[44px] w-[44px] rounded-full' />

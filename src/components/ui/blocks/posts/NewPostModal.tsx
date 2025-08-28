@@ -6,6 +6,7 @@ import { Textarea } from "../../shared/textarea";
 import { Input } from "../../shared/input";
 import { useAppSelector } from "@/store/hooks";
 import P from "../../shared/text/P";
+import { H3 } from "../../shared/text/H";
 
 interface NewPostModalProps {
   setPostModal: Dispatch<SetStateAction<boolean>>;
@@ -40,7 +41,7 @@ export default function NewPostModal({ setPostModal, handleNewPost }: NewPostMod
 
   return (
     <ModalContainer onClose={() => setPostModal(false)}>
-      <p className='text-[22px] font-medium text-text-primary'>New Post</p>
+      <H3>New Post</H3>
 
       <Textarea
         className='resize min-w-[200px] border-border border rounded-md p-2'

@@ -9,6 +9,7 @@ import CommentButton from "../../shared/buttons/CommentButton";
 import NewCommentModal from "../comments/NewCommentModal";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { createNewComment } from "@/store/redusers/commentsReduser";
+import P from "../../shared/text/P";
 
 export default function Post({ post }: { post: PostInterface }) {
   const [commentModal, setCommentModal] = useState(false);
@@ -40,10 +41,10 @@ export default function Post({ post }: { post: PostInterface }) {
           <div className='flex flex-col gap-2'>
             <div className='flex gap-2 text-[17px]'>
               <strong className='text-text-primary'>{post?.user?.username}</strong>
-              <p className='text-text-secondary'>· {postDateFormat(post?.created_at)}</p>
+              <P variant={"secondary"}>· {postDateFormat(post?.created_at)}</P>
             </div>
 
-            <p className='text-[16px] text-text-secondary'>{post?.content}</p>
+            <P variant={"secondary"}>{post?.content}</P>
             {post?.image_url && post?.image_url?.length > 0 && (
               <div
                 className={`

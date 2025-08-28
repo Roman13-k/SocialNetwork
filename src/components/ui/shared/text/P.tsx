@@ -7,10 +7,12 @@ const paragraphVariants = cva("", {
     variant: {
       default: "text-text-primary",
       error: "text-red-500",
+      secondary: "text-text-secondary",
     },
     size: {
+      xs: "text-[14px]",
       default: "text-[16px] font-normal",
-      lg: "text-[18px]",
+      lg: "text-[18px] font-medium",
     },
   },
   defaultVariants: {

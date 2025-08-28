@@ -1,5 +1,7 @@
 import React from "react";
 import Image from "next/image";
+import { H1 } from "../shared/text/H";
+import P from "../shared/text/P";
 
 export default function Intro() {
   return (
@@ -11,12 +13,12 @@ export default function Intro() {
         height={120}
         className='rounded-full shadow-md'
       />
-      <h1 className='text-4xl font-bold text-text-primary'>Welcome to Twister</h1>
-      <p className='text-lg text-text-secondary max-w-2xl'>
+      <H1>Welcome to Twister</H1>
+      <P variant={"secondary"} size={"lg"} className=' max-w-2xl'>
         Twister is your place for short and sharp thoughts. Post micro-messages, discover trending
         topics, and engage with the community. <br />
         Join the conversation and let your ideas twist around the world!
-      </p>
+      </P>
     </section>
   );
 }

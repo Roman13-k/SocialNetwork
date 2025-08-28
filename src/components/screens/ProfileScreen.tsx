@@ -13,8 +13,6 @@ export default function ProfileScreen() {
   const { user, loading, error } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
-  //! сделать полное удаление аккаунта
-
   const userInfo = [
     { name: "Email: ", value: user?.user_metadata.email },
     { name: "Count of posts: ", value: user?.stats.posts_count },

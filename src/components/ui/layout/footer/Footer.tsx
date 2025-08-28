@@ -2,6 +2,7 @@ import { navData } from "@/utils/nav";
 import Link from "next/link";
 import React from "react";
 import MainContainer from "../../shared/containers/MainContainer";
+import P from "../../shared/text/P";
 
 export default function Footer() {
   return (
@@ -19,9 +20,9 @@ export default function Footer() {
             ))}
           </nav>
 
-          <p className='text-xs md:text-sm mt-2 md:mt-0'>
+          <P size={"xs"} variant={"secondary"} className='mt-2'>
             &copy; {new Date().getFullYear()} Twister. All rights reserved.
-          </p>
+          </P>
         </div>
       </MainContainer>
     </footer>

@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { integerFormat } from "@/utils/integerFormat";
 import Image from "next/image";
 import React, { useState } from "react";
+import P from "../text/P";
 
 interface LikeButtonProps {
   post_id: string;
@@ -39,7 +40,7 @@ export default function LikeButton({ post_id, user_id, count, liked_by_user }: L
         e.preventDefault();
         toggleLike();
       }}
-      className='flex items-center text-text-secondary hover:text-like transition-all group cursor-pointer'>
+      className='flex items-center transition-all group cursor-pointer'>
       <div className='rounded-full group-hover:bg-like/30 p-1 transition-all'>
         {isLiked ? (
           <Image src={"/like-field.png"} alt='likes' width={22} height={20} />
@@ -47,7 +48,9 @@ export default function LikeButton({ post_id, user_id, count, liked_by_user }: L
           <Image src={"/like.png"} alt='likes' width={22} height={20} />
         )}
       </div>
-      <p>{integerFormat(countLikes)}</p>
+      <P variant={"secondary"} className='group-hover:text-like font-medium'>
+        {integerFormat(countLikes)}
+      </P>
     </button>
   );
 }

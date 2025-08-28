@@ -5,6 +5,7 @@ import { useAppDispatch } from "@/store/hooks";
 import { loginUser } from "@/store/redusers/userReducer";
 import { LoginProviderType } from "@/types/login";
 import ModalContainer from "../../shared/containers/ModalContainer";
+import { H4 } from "../../shared/text/H";
 
 export default function LoginModal({
   setLoginModal,
@@ -20,7 +21,7 @@ export default function LoginModal({
 
   return (
     <ModalContainer onClose={() => setLoginModal(false)}>
-      <h2 className='text-[22px] text-text-primary font-medium'>Login</h2>
+      <H4 className='text-[22px] text-text-primary font-medium'>Login</H4>
       <div className='flex gap-5'>
         <button onClick={() => handleLogin("google")} className='cursor-pointer'>
           <Image width={64} height={64} src={"/google.svg"} alt='google.svg' />

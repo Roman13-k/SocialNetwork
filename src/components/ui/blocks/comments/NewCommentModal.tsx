@@ -4,6 +4,7 @@ import { Textarea } from "../../shared/textarea";
 import { Button } from "../../shared/buttons/button";
 import { useAppSelector } from "@/store/hooks";
 import P from "../../shared/text/P";
+import { H4 } from "../../shared/text/H";
 
 export default function NewCommentModal({
   setCommentModal,
@@ -17,7 +18,7 @@ export default function NewCommentModal({
 
   return (
     <ModalContainer onClose={() => setCommentModal(false)}>
-      <p className='text-[22px] font-medium text-text-primary'>Сomment on this</p>
+      <H4>Сomment on this</H4>
 
       <Textarea
         className='resize min-w-[200px] border-border border rounded-md p-2'

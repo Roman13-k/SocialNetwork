@@ -7,18 +7,24 @@ const limit = 5;
 
 interface PostState {
   posts: PostInterface[];
+  userPosts: PostInterface[];
+  userLikedPosts: PostInterface[];
   currentPost: PostInterface;
   loading: boolean;
   error: string | null;
   offset: number | null;
+  userOffset: number | null;
 }
 
 const initialState: PostState = {
   posts: [],
+  userLikedPosts: [],
+  userPosts: [],
   currentPost: {} as PostInterface,
   loading: false,
   error: null,
   offset: 0,
+  userOffset: 0,
 };
 
 const postInformation = `

@@ -6,6 +6,7 @@ import { Trash2 } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 import DeleteDialog from "../../shared/dialog/DeleteDialog";
+import P from "../../shared/text/P";
 
 export default function Comment({ comment }: { comment: CommentInterface }) {
   const dispatch = useAppDispatch();
@@ -26,7 +27,7 @@ export default function Comment({ comment }: { comment: CommentInterface }) {
       <div className='flex flex-col gap-1 w-full'>
         <div className='flex gap-2 text-[17px] w-full'>
           <strong className='text-text-primary'>{comment.user.username}</strong>
-          <p className='text-text-secondary'>· {postDateFormat(comment.created_at)}</p>
+          <P variant={"secondary"}>· {postDateFormat(comment.created_at)}</P>
           {userId === comment.user_id && (
             <DeleteDialog
               handleAction={hadleDeleteComment}
@@ -40,7 +41,7 @@ export default function Comment({ comment }: { comment: CommentInterface }) {
           )}
         </div>
 
-        <p className='text-[16px] text-text-secondary'>{comment.content}</p>
+        <P variant={"secondary"}>{comment.content}</P>
       </div>
     </li>
   );

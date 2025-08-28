@@ -1,34 +1,49 @@
-import { cn } from "@/lib/utils";
-import { cva, VariantProps } from "class-variance-authority";
 import React from "react";
 
-const paragraphVariants = cva("", {
-  variants: {
-    variant: {
-      default: "text-text-primary",
-      error: "text-red-500",
-    },
-    size: {
-      default: "text-[16px] font-normal",
-      lg: "text-[18px]",
-    },
-  },
-  defaultVariants: {
-    variant: "default",
-    size: "default",
-  },
-});
-
-export default function H({
-  className,
-  variant,
-  size,
-  children,
-  ...props
-}: React.ComponentProps<"p"> & VariantProps<typeof paragraphVariants>) {
+export function H1({ className, children, ...props }: React.ComponentProps<"h1">) {
   return (
-    <h1 className={cn(paragraphVariants({ className, variant, size }))} {...props}>
+    <h1 className={`${className} text-text-primary text-[36px] font-semibold`} {...props}>
       {children}
     </h1>
+  );
+}
+
+export function H2({ className, children, ...props }: React.ComponentProps<"h2">) {
+  return (
+    <h2 className={`${className} text-text-primary text-[28px] font-medium`} {...props}>
+      {children}
+    </h2>
+  );
+}
+
+export function H3({ className, children, ...props }: React.ComponentProps<"h3">) {
+  return (
+    <h3 className={`${className} text-text-primary text-[24px] font-medium`} {...props}>
+      {children}
+    </h3>
+  );
+}
+
+export function H4({ className, children, ...props }: React.ComponentProps<"h4">) {
+  return (
+    <h4 className={`${className} text-text-primary text-[22px] font-medium`} {...props}>
+      {children}
+    </h4>
+  );
+}
+
+export function H5({ className, children, ...props }: React.ComponentProps<"h5">) {
+  return (
+    <h5 className={`${className} text-text-primary text-[20px] font-medium`} {...props}>
+      {children}
+    </h5>
+  );
+}
+
+export function H6({ className, children, ...props }: React.ComponentProps<"h6">) {
+  return (
+    <h6 className={`${className} text-text-primary text-[20px]`} {...props}>
+      {children}
+    </h6>
   );
 }
