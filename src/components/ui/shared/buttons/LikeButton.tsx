@@ -6,7 +6,7 @@ import React, { useState } from "react";
 
 interface LikeButtonProps {
   post_id: string;
-  user_id: string;
+  user_id: string | undefined;
   count: number;
   liked_by_user: boolean;
 }
@@ -16,6 +16,7 @@ export default function LikeButton({ post_id, user_id, count, liked_by_user }: L
   const [countLikes, setCountLikes] = useState(count);
 
   const toggleLike = async () => {
+    if (!user_id) return;
     if (isLiked) {
       const { error } = await supabase.from("likes").delete().match({ post_id, user_id });
       if (!error) {

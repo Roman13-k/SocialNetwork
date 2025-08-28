@@ -15,9 +15,11 @@ export default function Post({ post }: { post: PostInterface }) {
   const [commentsCount, setCommentsCount] = useState(post.comments[0].count);
   const dispatch = useAppDispatch();
   const commentError = useAppSelector((state) => state.comments.error);
+  const userId = useAppSelector((state) => state.user.user?.id);
 
   const handleNewComment = async (content: string) => {
-    await dispatch(createNewComment({ content, user_id: post.user.id, post_id: post.id }));
+    if (!userId) return;
+    await dispatch(createNewComment({ content, user_id: userId, post_id: post.id }));
     if (!commentError) {
       setCommentsCount((prev) => prev + 1);
       setCommentModal(false);
@@ -69,7 +71,7 @@ export default function Post({ post }: { post: PostInterface }) {
 
             <div className='flex gap-10 font-medium'>
               <LikeButton
-                user_id={post.user.id}
+                user_id={userId}
                 post_id={post.id}
                 count={post.likes[0].count}
                 liked_by_user={post.liked_by_user}
@@ -79,7 +81,7 @@ export default function Post({ post }: { post: PostInterface }) {
           </div>
         </Link>
       </li>
-      {commentModal && (
+      {commentModal && userId && (
         <NewCommentModal handleNewComment={handleNewComment} setCommentModal={setCommentModal} />
       )}
     </>

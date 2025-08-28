@@ -7,6 +7,7 @@ const limit = 5;
 
 interface PostState {
   posts: PostInterface[];
+  currentPost: PostInterface;
   loading: boolean;
   error: string | null;
   offset: number | null;
@@ -14,7 +15,8 @@ interface PostState {
 
 const initialState: PostState = {
   posts: [],
-  loading: false,
+  currentPost: {} as PostInterface,
+  loading: true,
   error: null,
   offset: 0,
 };
@@ -105,6 +107,30 @@ export const loadPosts = createAsyncThunk<
   }
 });
 
+export const getPostById = createAsyncThunk<
+  PostInterface,
+  { id: string; userId?: string },
+  { rejectValue: string }
+>("posts/getPostById", async ({ id, userId }, { rejectWithValue }) => {
+  try {
+    const { data, error } = await supabase
+      .from("posts")
+      .select(postInformation)
+      .eq("id", id)
+      .single();
+
+    if (error) throw error;
+
+    return {
+      ...data,
+      liked_by_user: userId ? data.liked_by_user.some((like) => like.user_id === userId) : false,
+      user: Array.isArray(data.user) ? data.user[0] : data.user,
+    };
+  } catch (err) {
+    return rejectWithValue((err as Error).message);
+  }
+});
+
 export const postsSlice = createSlice({
   name: "posts",
   initialState,
@@ -127,6 +153,9 @@ export const postsSlice = createSlice({
     });
     addAsyncCase(builder, deletePostById, (state, action) => {
       state.posts = state.posts.filter((post) => post.id !== action.payload);
+    });
+    addAsyncCase(builder, getPostById, (state, action) => {
+      state.currentPost = action.payload;
     });
   },
 });
