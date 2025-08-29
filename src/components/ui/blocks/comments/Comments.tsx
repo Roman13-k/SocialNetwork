@@ -23,7 +23,7 @@ export default function Comments({ postId }: { postId: string }) {
     return () => {
       dispatch(resetComments());
     };
-  }, []);
+  }, [dispatch]);
 
   return (
     <section className='flex flex-col'>

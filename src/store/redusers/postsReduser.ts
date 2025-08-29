@@ -14,6 +14,7 @@ interface PostState {
   error: string | null;
   offset: number | null;
   userOffset: number | null;
+  userLikedOffset: number | null;
 }
 
 const initialState: PostState = {
@@ -24,6 +25,7 @@ const initialState: PostState = {
   loading: false,
   error: null,
   offset: 0,
+  userLikedOffset: 0,
   userOffset: 0,
 };
 
@@ -43,6 +45,8 @@ const postInformation = `
   ),
   image_url
 `;
+
+//? select возвращает массив обектов что не всегда верно
 
 export const createNewPost = createAsyncThunk<
   PostInterface[],
@@ -74,7 +78,7 @@ export const deletePostById = createAsyncThunk<
 >("posts/deletePost", async ({ postId, image_url }, { rejectWithValue }) => {
   try {
     if (image_url && image_url?.length !== 0) {
-      for (let url of image_url) {
+      for (const url of image_url) {
         const parts = url.split("/public/posts-images/");
         await supabase.storage.from("posts-images").remove([parts[1]]);
       }
@@ -137,6 +141,59 @@ export const getPostById = createAsyncThunk<
   }
 });
 
+export const loadUserPosts = createAsyncThunk<
+  PostInterface[],
+  { userId?: string; offset: number },
+  { rejectValue: string }
+>("posts/loadUserPosts", async ({ userId, offset }, { rejectWithValue }) => {
+  const { data, error } = await supabase
+    .from("posts")
+    .select(postInformation)
+    .eq("user_id", userId)
+    .range(offset, offset + limit - 1)
+    .order("created_at", { ascending: false });
+
+  if (error) return rejectWithValue(error.message);
+  if (!data) return [];
+
+  return data.map((post) => ({
+    ...post,
+    liked_by_user: userId ? post.liked_by_user?.some((like) => like.user_id === userId) : false,
+    user: Array.isArray(post.user) ? post.user[0] : post.user,
+  }));
+});
+
+export const loadUserLikedPosts = createAsyncThunk<
+  PostInterface[],
+  { userId?: string; offset: number },
+  { rejectValue: string }
+>("posts/loadUserLikedPosts", async ({ userId, offset }, { rejectWithValue }) => {
+  const { data, error } = await supabase
+    .from("likes")
+    .select(
+      `
+      post:post_id (
+        ${postInformation}
+      )
+    `,
+    )
+    .eq("user_id", userId)
+    .range(offset, offset + limit - 1)
+    .order("created_at", { ascending: false });
+
+  if (error) return rejectWithValue(error.message);
+  if (!data) return [];
+
+  return data.map((item) => {
+    const post = item.post as unknown as PostInterface;
+    return {
+      ...post,
+      liked_by_user: true,
+      user: post.user,
+    };
+  });
+});
+
 export const postsSlice = createSlice({
   name: "posts",
   initialState,
@@ -162,6 +219,22 @@ export const postsSlice = createSlice({
     });
     addAsyncCase(builder, getPostById, (state, action) => {
       state.currentPost = action.payload;
+    });
+    addAsyncCase(builder, loadUserPosts, (state, action) => {
+      if (action.payload.length === 0) {
+        state.userOffset = null;
+      } else if (state.userOffset !== null) {
+        state.userPosts.push(...action.payload);
+        state.userOffset += limit;
+      }
+    });
+    addAsyncCase(builder, loadUserLikedPosts, (state, action) => {
+      if (action.payload.length === 0) {
+        state.userLikedOffset = null;
+      } else if (state.userLikedOffset !== null) {
+        state.userLikedPosts.push(...action.payload);
+        state.userLikedOffset += limit;
+      }
     });
   },
 });

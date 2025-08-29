@@ -80,6 +80,23 @@ export const loadComments = createAsyncThunk<
   }
 });
 
+export const loadUserComments = createAsyncThunk<
+  CommentInterface[],
+  { offset: number; userId?: string },
+  { rejectValue: string }
+>("comments/loadUserComments", async ({ offset, userId }, { rejectWithValue }) => {
+  const { data, error } = await supabase
+    .from("comments")
+    .select(commentInformation)
+    .eq("user_id", userId)
+    .range(offset, offset + limit - 1)
+    .order("created_at", { ascending: false });
+
+  if (error) return rejectWithValue(error.message);
+
+  return data;
+});
+
 export const commentsSlice = createSlice({
   name: "comments",
   initialState,
@@ -96,9 +113,17 @@ export const commentsSlice = createSlice({
       }
     });
     addAsyncCase(builder, deleteCommentById, (state, action) => {
-      state.comments = state.comments.filter((comment: any) => comment.id !== action.payload);
+      state.comments = state.comments.filter((comment) => comment.id !== action.payload);
     });
     addAsyncCase(builder, loadComments, (state, action) => {
+      if (action.payload.length === 0) {
+        state.offset = null;
+      } else if (state.offset !== null) {
+        state.comments.push(...action.payload);
+        state.offset += limit;
+      }
+    });
+    addAsyncCase(builder, loadUserComments, (state, action) => {
       if (action.payload.length === 0) {
         state.offset = null;
       } else if (state.offset !== null) {
