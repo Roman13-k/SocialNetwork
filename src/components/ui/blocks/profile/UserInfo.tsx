@@ -11,21 +11,22 @@ export default function UserInfo({ user }: { user: UserInterface }) {
     { name: "Count of likes: ", value: user?.stats.likes_count },
     { name: "Count of comments: ", value: user?.stats.comments_count },
   ];
+
   return (
     <>
       <H1>Hi, {user?.user_metadata.name}</H1>
-      <div className='flex gap-5'>
+      <div className='flex items-center lg:gap-5 gap-3'>
         <Image
           src={user?.user_metadata.avatar_url ?? ""}
           width={196}
           height={196}
           alt='profile'
-          className='rounded-full'
+          className='rounded-full w-24 h-24 md:w-32 md:h-32 lg:w-48 lg:h-48'
         />
-        <ul className='flex flex-col gap-3'>
+        <ul className='flex flex-col gap-2 lg:gap-3'>
           {userInfo.map((inf, index) => (
             <li key={index}>
-              <P size={"lg"} className='text-[18px] font-medium'>
+              <P size={"lg"}>
                 <span className='text-text-primary'>{inf.name}</span>
                 <span className='text-text-secondary'>{inf.value}</span>
               </P>

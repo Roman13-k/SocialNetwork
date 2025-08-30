@@ -20,7 +20,7 @@ export default function ModalContainer({ children, onClose }: ModalContainerProp
         e.preventDefault();
         onClose();
       }}
-      className='fixed inset-0 z-50 h-full w-full bg-black/30 flex justify-center items-center '>
+      className='fixed inset-0 z-70 h-full w-full bg-black/30 flex justify-center items-center '>
       <div
         onClick={(e) => e.stopPropagation()}
         className='bg-background-modal rounded-lg p-5 sm:p-10 flex flex-col justify-center items-center mx-5 gap-3 sm:gap-5'>

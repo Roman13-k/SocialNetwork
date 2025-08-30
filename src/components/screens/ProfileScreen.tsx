@@ -21,11 +21,11 @@ export default function ProfileScreen() {
 
   return (
     <MainContainer className='min-h-[95dvh]'>
-      {!user ? (
+      {error || !user ? (
         <P variant={"error"}>{error}</P>
       ) : (
         <>
-          <section className='flex flex-col justify-start items-start gap-10 p-16'>
+          <section className='flex flex-col justify-start items-start gap-4 lg:gap-10 lg:p-12 md:p-8 pb-4'>
             {loading ? (
               <ProfileSkeleton />
             ) : (

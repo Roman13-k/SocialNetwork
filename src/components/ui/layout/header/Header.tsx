@@ -63,8 +63,8 @@ export default function Header() {
           <X color='white' />
         </Button>
 
-        <UserNav setLoginModal={setLoginModal} />
-        <Nav />
+        <UserNav setBurgerMenu={setBurgerMenu} setLoginModal={setLoginModal} />
+        <Nav setBurgerMenu={setBurgerMenu} />
       </header>
     </>
   );

@@ -18,7 +18,7 @@ export default function UserInfluence() {
   }, [params]);
 
   return (
-    <section className='flex flex-col gap-5 px-16 items-center'>
+    <section className='flex flex-col lg:gap-5 gap-4 lg:px-16 md:px-8 items-center'>
       <Variants selectedVariant={selectedVariant} setSelectedVariant={setSelectedVariant} />
       <SelectedData selectedVariant={selectedVariant} />
     </section>

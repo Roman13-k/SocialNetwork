@@ -9,7 +9,9 @@ import { H2 } from "../../shared/text/H";
 export default function UserNav({
   setLoginModal,
   hover = true,
+  setBurgerMenu,
 }: {
+  setBurgerMenu?: Dispatch<SetStateAction<boolean>>;
   setLoginModal: Dispatch<SetStateAction<boolean>>;
   hover?: boolean;
 }) {
@@ -18,7 +20,10 @@ export default function UserNav({
     <div className='flex flex-col gap-3'>
       <H2 className='text-center'>
         {hover ? (
-          <Link className='flex gap-1 items-center' href={"/"}>
+          <Link
+            onClick={() => (setBurgerMenu ? setBurgerMenu(false) : "")}
+            className='flex gap-1 items-center'
+            href={"/"}>
             <Image src={"/phoenix.svg"} alt='phoenix' width={70} height={70} />
             <span>Twister</span>
           </Link>
@@ -32,7 +37,7 @@ export default function UserNav({
         ) : user == null ? (
           <Image src={"/user.png"} width={64} height={64} alt='profile' />
         ) : (
-          <Link href={"/profile"}>
+          <Link onClick={() => (setBurgerMenu ? setBurgerMenu(false) : "")} href={"/profile"}>
             <Image
               src={user.user_metadata.avatar_url ?? ""}
               width={64}

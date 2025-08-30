@@ -9,11 +9,11 @@ interface VariantsProps {
 
 export default function Variants({ selectedVariant, setSelectedVariant }: VariantsProps) {
   return (
-    <div className='flex '>
+    <div className='flex w-full max-w-[650px]'>
       {variants.map((v, index) => (
         <button
           onClick={() => setSelectedVariant(v)}
-          className={`border border-border px-10 py-4 text-text-primary text-2xl hover:bg-background-secondary/60 uppercase ${
+          className={`flex-grow-1 border border-border lg:px-10 md:px-6 px-1 lg:py-4 md:py-2 py-1 text-text-primary lg:text-2xl text-xl hover:bg-background-secondary/60 sm:uppercase ${
             selectedVariant === v ? "bg-background-secondary" : ""
           } cursor-pointer`}
           key={index}>

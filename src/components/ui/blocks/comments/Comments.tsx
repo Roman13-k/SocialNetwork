@@ -21,13 +21,13 @@ export default function Comments({ postId }: { postId: string }) {
       callback={() => loadComments({ offset, postId })}
       loading={loading}
       offset={offset}>
-      <ul className='flex flex-col gap-4'>
+      <ul className='flex flex-col gap-3 md:gap-5 w-full max-w-[650px]'>
         {comments.map((comment) => (
           <Comment key={comment.id} comment={comment} />
         ))}
       </ul>
       {loading && (
-        <div className='flex flex-col gap-4'>
+        <div className='flex flex-col gap-3 md:gap-5 w-full max-w-[650px]'>
           <CommentSkeleton />
           <CommentSkeleton />
         </div>

@@ -38,9 +38,11 @@ export default function PostScreen() {
 
   return (
     <MainContainer>
-      <div className='flex flex-col items-center gap-10 px-14 pt-10'>
+      <div className='flex flex-col items-center md:gap-8 gap-4 lg:gap-10 pt-10'>
         <nav className='text-sm text-text-secondary mb-4 font-medium text-[18px] self-start'>
-          <Link href='/' className='text-text-secondary hover:text-accent font-medium text-[18px]'>
+          <Link
+            href='/'
+            className='text-text-secondary hover:text-accent font-medium text-[14px] md:text-[16px] lg:text-[18px]'>
             Главная
           </Link>{" "}
           / Пост {params.id}

@@ -45,24 +45,28 @@ export default function SelectedData({ selectedVariant }: { selectedVariant: Dat
       loading={
         selectedVariant === "posts" || selectedVariant === "likedPosts" ? loading : commentsLoading
       }>
-      {selectedVariant === "posts"
-        ? userPosts.map((post) => <Post key={post.id} post={post} />)
-        : selectedVariant === "likedPosts"
-        ? userLikedPosts.map((post) => <Post key={post.id} post={post} />)
-        : comments.map((com) => <Comment comment={com} key={com.id} />)}
+      <ul className='flex flex-col gap-3 md:gap-5 w-full max-w-[650px]'>
+        {selectedVariant === "posts"
+          ? userPosts.map((post) => <Post key={post.id} post={post} />)
+          : selectedVariant === "likedPosts"
+          ? userLikedPosts.map((post) => <Post key={post.id} post={post} />)
+          : comments.map((com) => <Comment comment={com} key={com.id} />)}
+      </ul>
 
-      {loading && (
-        <>
-          <PostSkeleton />
-          <PostSkeleton />
-        </>
-      )}
-      {commentsLoading && (
-        <>
-          <CommentSkeleton />
-          <CommentSkeleton />
-        </>
-      )}
+      <ul className='flex flex-col gap-3 md:gap-5 w-full max-w-[650px]'>
+        {loading && (
+          <>
+            <PostSkeleton />
+            <PostSkeleton />
+          </>
+        )}
+        {commentsLoading && (
+          <>
+            <CommentSkeleton />
+            <CommentSkeleton />
+          </>
+        )}
+      </ul>
     </RenderWithInfinityData>
   );
 }
