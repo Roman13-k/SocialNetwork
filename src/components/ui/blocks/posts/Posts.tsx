@@ -1,28 +1,21 @@
 "use client";
-import React, { useRef } from "react";
+import React from "react";
 import Post from "./Post";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useAppSelector } from "@/store/hooks";
 import { loadPosts } from "@/store/redusers/postsReduser";
 import PostSkeleton from "../../shared/skeletons/PostSkeleton";
-import { useObserver } from "@/hooks/useObserver";
+import RenderWithInfinityData from "../../layout/RenderWithInfinityData";
 
 export default function Posts() {
   const { posts, loading: postLoading } = useAppSelector((state) => state.posts);
-  const { user, loading } = useAppSelector((state) => state.user);
-  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.user);
   const offset = useAppSelector((state) => state.posts.offset);
-  const divRef = useRef<HTMLDivElement | null>(null);
-
-  const loadMore = () => {
-    if (!postLoading && offset !== null && !loading) {
-      dispatch(loadPosts({ userId: user?.id, offset }));
-    }
-  };
-
-  useObserver(loadMore, loading, divRef);
 
   return (
-    <section className='flex flex-col w-full items-center justify-center'>
+    <RenderWithInfinityData
+      offset={offset}
+      loading={postLoading}
+      callback={() => loadPosts({ userId: user?.id, offset })}>
       <ul className='flex flex-col gap-5'>
         {posts?.map((post) => (
           <Post key={post.id} post={post} />
@@ -31,7 +24,6 @@ export default function Posts() {
       <ul className='flex flex-col gap-5'>
         {postLoading && Array.from({ length: 3 }, (_, index) => <PostSkeleton key={index} />)}
       </ul>
-      <div className='block w-full h-4' ref={divRef}></div>
-    </section>
+    </RenderWithInfinityData>
   );
 }

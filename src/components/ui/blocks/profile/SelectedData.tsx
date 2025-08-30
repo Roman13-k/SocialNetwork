@@ -1,17 +1,16 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { DataVariantsType } from "./UserInfluence";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { loadUserLikedPosts, loadUserPosts } from "@/store/redusers/postsReduser";
 import Post from "../posts/Post";
 import PostSkeleton from "../../shared/skeletons/PostSkeleton";
-import { useObserver } from "@/hooks/useObserver";
 import CommentSkeleton from "../../shared/skeletons/CommentSkeleton";
 import Comment from "../comments/Comment";
 import { loadUserComments, resetComments } from "@/store/redusers/commentsReduser";
+import RenderWithInfinityData from "../../layout/RenderWithInfinityData";
 
 export default function SelectedData({ selectedVariant }: { selectedVariant: DataVariantsType }) {
-  const divRef = useRef<HTMLDivElement | null>(null);
   const { loading, userLikedPosts, userLikedOffset, userOffset, userPosts } = useAppSelector(
     (state) => state.posts,
   );
@@ -21,10 +20,10 @@ export default function SelectedData({ selectedVariant }: { selectedVariant: Dat
 
   const loadData = () => {
     if (selectedVariant === "posts" && userOffset !== null) {
-      dispatch(loadUserPosts({ userId, offset: userOffset }));
+      return loadUserPosts({ userId, offset: userOffset });
     } else if (selectedVariant === "likedPosts" && userLikedOffset !== null) {
-      dispatch(loadUserLikedPosts({ userId, offset: userLikedOffset }));
-    } else if (offset !== null) dispatch(loadUserComments({ userId, offset }));
+      return loadUserLikedPosts({ userId, offset: userLikedOffset });
+    } else if (offset !== null) return loadUserComments({ userId, offset });
   };
 
   useEffect(() => {
@@ -33,19 +32,25 @@ export default function SelectedData({ selectedVariant }: { selectedVariant: Dat
     };
   }, [dispatch]);
 
-  useObserver(
-    loadData,
-    selectedVariant === "posts" || selectedVariant === "likedPosts" ? loading : commentsLoading,
-    divRef,
-  );
-
   return (
-    <div className='flex flex-col gap-4'>
+    <RenderWithInfinityData
+      callback={loadData}
+      offset={
+        selectedVariant === "posts"
+          ? userOffset
+          : selectedVariant === "likedPosts"
+          ? userLikedOffset
+          : offset
+      }
+      loading={
+        selectedVariant === "posts" || selectedVariant === "likedPosts" ? loading : commentsLoading
+      }>
       {selectedVariant === "posts"
         ? userPosts.map((post) => <Post key={post.id} post={post} />)
         : selectedVariant === "likedPosts"
         ? userLikedPosts.map((post) => <Post key={post.id} post={post} />)
         : comments.map((com) => <Comment comment={com} key={com.id} />)}
+
       {loading && (
         <>
           <PostSkeleton />
@@ -58,7 +63,6 @@ export default function SelectedData({ selectedVariant }: { selectedVariant: Dat
           <CommentSkeleton />
         </>
       )}
-      <div ref={divRef} className='block w-full h-4'></div>
-    </div>
+    </RenderWithInfinityData>
   );
 }
