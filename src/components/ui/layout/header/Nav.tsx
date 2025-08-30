@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-export default function Nav({ hover }: { hover: boolean }) {
+export default function Nav({ hover = true }: { hover?: boolean }) {
   return (
     <nav>
       <ul className={`flex flex-col gap-5 font-medium text-[18px] ${hover ? "" : "items-center"}`}>

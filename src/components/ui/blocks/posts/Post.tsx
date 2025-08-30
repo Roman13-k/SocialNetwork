@@ -29,16 +29,16 @@ export default function Post({ post }: { post: PostInterface }) {
 
   return (
     <>
-      <li className='px-5 py-3 border-border border rounded-md w-[700px] transition-all hover:bg-background-secondary/80 cursor-pointer'>
+      <li className='lg:px-5 md:px-4 px-3 lg:py-3 py-2 border-border border rounded-md w-full transition-all hover:bg-background-secondary/80 cursor-pointer'>
         <Link className='flex items-start' href={`/post/${post.id}`}>
           <Image
             src={post?.user?.avatar_url ?? "/"}
             alt=''
             width={40}
             height={40}
-            className='mr-2 rounded-full'
+            className='md:mr-2 mr-1 rounded-full lg:scale-100 md:scale-95 scale-85'
           />
-          <div className='flex flex-col gap-2'>
+          <div className='flex flex-col md:gap-2 gap-1'>
             <div className='flex gap-2 text-[17px]'>
               <strong className='text-text-primary'>{post?.user?.username}</strong>
               <P variant={"secondary"}>· {postDateFormat(post?.created_at)}</P>
@@ -48,7 +48,7 @@ export default function Post({ post }: { post: PostInterface }) {
             {post?.image_url && post?.image_url?.length > 0 && (
               <div
                 className={`
-              grid gap-2 max-w-[520px] max-h-[520px] w-full h-full
+              grid md:gap-2 gap-1 max-w-[540px] w-full h-auto
               ${post.image_url.length === 1 ? "grid-cols-1 grid-rows-1" : ""}
               ${post.image_url.length === 2 ? "grid-cols-2 grid-rows-1" : ""}
               ${post.image_url.length === 3 ? "grid-cols-2 grid-rows-2" : ""}
@@ -58,8 +58,8 @@ export default function Post({ post }: { post: PostInterface }) {
                     key={url}
                     src={url}
                     alt='post'
-                    width={520}
-                    height={520}
+                    width={540}
+                    height={540}
                     className={`
             object-cover rounded-2xl w-full h-full border-2 border-accent/15
             ${post?.image_url?.length === 3 && i === 0 ? "col-span-2 row-span-2" : ""}
@@ -70,7 +70,7 @@ export default function Post({ post }: { post: PostInterface }) {
               </div>
             )}
 
-            <div className='flex gap-10 font-medium'>
+            <div className='flex gap-6 md:gap-10 font-medium'>
               <LikeButton
                 user_id={userId}
                 post_id={post.id}

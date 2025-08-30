@@ -44,7 +44,7 @@ export default function NewPostModal({ setPostModal, handleNewPost }: NewPostMod
       <H3>New Post</H3>
 
       <Textarea
-        className='resize min-w-[200px] border-border border rounded-md p-2'
+        className='resize min-w-[140px] sm:min-w-[200px] border-border border rounded-md p-2'
         value={content}
         onChange={(e) => setContent(e.currentTarget.value)}
       />
@@ -53,7 +53,7 @@ export default function NewPostModal({ setPostModal, handleNewPost }: NewPostMod
       {error && <P variant={"error"}>{error}</P>}
 
       <Button
-        className='w-[130px] flex justify-center items-center gap-2'
+        className='w-[100px] sm:w-[130px] flex justify-center items-center gap-2'
         size='lg'
         variant='secondary'
         onClick={() => handleNewPost(content, files)}

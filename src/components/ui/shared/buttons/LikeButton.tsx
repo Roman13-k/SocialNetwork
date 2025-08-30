@@ -43,9 +43,21 @@ export default function LikeButton({ post_id, user_id, count, liked_by_user }: L
       className='flex items-center transition-all group cursor-pointer'>
       <div className='rounded-full group-hover:bg-like/30 p-1 transition-all'>
         {isLiked ? (
-          <Image src={"/like-field.png"} alt='likes' width={22} height={20} />
+          <Image
+            src={"/like-field.png"}
+            alt='likes'
+            width={22}
+            height={20}
+            className='lg:scale-100 scale-80'
+          />
         ) : (
-          <Image src={"/like.png"} alt='likes' width={22} height={20} />
+          <Image
+            src={"/like.png"}
+            alt='likes'
+            width={22}
+            height={20}
+            className='lg:scale-100 scale-80'
+          />
         )}
       </div>
       <P variant={"secondary"} className='group-hover:text-like font-medium'>

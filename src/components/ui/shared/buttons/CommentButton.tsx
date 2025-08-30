@@ -18,7 +18,13 @@ export default function CommentButton({ count, setCommentModal }: CommentButtonP
       }}
       className='flex items-center transition-all cursor-pointer group'>
       <div className='rounded-full group-hover:bg-accent/30 p-1 transition-all'>
-        <Image src={"/comment.png"} alt='comments' width={20} height={18} />
+        <Image
+          src={"/comment.png"}
+          alt='comments'
+          width={20}
+          height={18}
+          className='lg:scale-100 scale-80'
+        />
       </div>
       <P variant={"secondary"} className='group-hover:text-accent font-medium'>
         {integerFormat(count)}

@@ -21,7 +21,7 @@ export default function LoginModal({
 
   return (
     <ModalContainer onClose={() => setLoginModal(false)}>
-      <H4 className='text-[22px] text-text-primary font-medium'>Login</H4>
+      <H4>Login</H4>
       <div className='flex gap-5'>
         <button onClick={() => handleLogin("google")} className='cursor-pointer'>
           <Image width={64} height={64} src={"/google.svg"} alt='google.svg' />

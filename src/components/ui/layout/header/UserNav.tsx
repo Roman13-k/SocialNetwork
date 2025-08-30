@@ -8,10 +8,10 @@ import { H2 } from "../../shared/text/H";
 
 export default function UserNav({
   setLoginModal,
-  hover,
+  hover = true,
 }: {
   setLoginModal: Dispatch<SetStateAction<boolean>>;
-  hover: boolean;
+  hover?: boolean;
 }) {
   const { user, loading } = useAppSelector((state) => state.user);
   return (

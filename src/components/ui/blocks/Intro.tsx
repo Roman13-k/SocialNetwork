@@ -5,13 +5,13 @@ import P from "../shared/text/P";
 
 export default function Intro() {
   return (
-    <section className='py-10 text-center flex flex-col items-center gap-4'>
+    <section className='lg:pt-10 md:pt-8 pt-5 text-center flex flex-col items-center gap-4'>
       <Image
         src='/phoenix.svg'
         alt='Twister logo'
         width={120}
         height={120}
-        className='rounded-full shadow-md'
+        className='rounded-full shadow-md lg:scale-100 md:scale-90 scale-80'
       />
       <H1>Welcome to Twister</H1>
       <P variant={"secondary"} size={"lg"} className=' max-w-2xl'>

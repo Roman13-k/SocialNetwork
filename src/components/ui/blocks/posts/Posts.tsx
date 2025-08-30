@@ -8,22 +8,26 @@ import RenderWithInfinityData from "../../layout/RenderWithInfinityData";
 
 export default function Posts() {
   const { posts, loading: postLoading } = useAppSelector((state) => state.posts);
-  const { user } = useAppSelector((state) => state.user);
+  const { user, loading } = useAppSelector((state) => state.user);
   const offset = useAppSelector((state) => state.posts.offset);
 
   return (
     <RenderWithInfinityData
       offset={offset}
-      loading={postLoading}
+      loading={postLoading || loading}
       callback={() => loadPosts({ userId: user?.id, offset })}>
-      <ul className='flex flex-col gap-5'>
+      <ul className='flex flex-col gap-3 md:gap-5 w-full max-w-[650px]'>
         {posts?.map((post) => (
           <Post key={post.id} post={post} />
         ))}
       </ul>
-      <ul className='flex flex-col gap-5'>
-        {postLoading && Array.from({ length: 3 }, (_, index) => <PostSkeleton key={index} />)}
-      </ul>
+      {postLoading && (
+        <ul className='flex flex-col gap-3 md:gap-5 w-full max-w-[650px]'>
+          {Array.from({ length: 3 }, (_, index) => (
+            <PostSkeleton key={index} />
+          ))}
+        </ul>
+      )}
     </RenderWithInfinityData>
   );
 }

@@ -6,10 +6,10 @@ import P from "../../shared/text/P";
 
 export default function Footer() {
   return (
-    <footer className='bg-background-primary  text-gray-700 py-6 mt-auto border-t border-gray-300 '>
+    <footer className='bg-background-primary text-gray-700 md:py-6 py-4 mt-auto border-t border-gray-300 '>
       <MainContainer>
         <div className='w-full flex items-center justify-between'>
-          <nav className='flex flex-wrap gap-4 text-sm md:text-base'>
+          <nav className='flex flex-wrap md:gap-4 gap-2 text-sm md:text-base'>
             {navData.map((item) => (
               <Link
                 key={item.href}
