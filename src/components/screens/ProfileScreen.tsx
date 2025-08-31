@@ -1,27 +1,46 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import MainContainer from "../ui/shared/containers/MainContainer";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { logoutUser } from "@/store/redusers/userReducer";
-import { redirect } from "next/navigation";
+import { logoutUser, getProfileById } from "@/store/redusers/userReducer";
+import { redirect, usePathname } from "next/navigation";
 import DeleteDialog from "../ui/shared/dialog/DeleteDialog";
 import P from "../ui/shared/text/P";
 import ProfileSkeleton from "../ui/shared/skeletons/ProfileSkeleton";
 import UserInfo from "../ui/blocks/profile/UserInfo";
 import UserInfluence from "../ui/blocks/profile/UserInfluence";
+import { CurrentProfileType, isUserInterface } from "@/types/user";
 
 export default function ProfileScreen() {
-  const { user, loading, error } = useAppSelector((state) => state.user);
+  const path = usePathname();
   const dispatch = useAppDispatch();
+
+  const { user, profile, loading, error } = useAppSelector((state) => state.user);
+
+  const segments = path.split("/");
+  const profileId = segments[2];
+
+  useEffect(() => {
+    if (profileId) {
+      dispatch(getProfileById(profileId));
+    }
+  }, [profileId, dispatch]);
 
   const handleExit = () => {
     dispatch(logoutUser());
     redirect("/");
   };
 
+  useEffect(() => {
+    console.log(profile);
+  }, [profile]);
+
+  const isOwnProfile = !profileId;
+  const currentProfile = isOwnProfile ? user : profile;
+
   return (
     <MainContainer className='min-h-[95dvh]'>
-      {error || !user ? (
+      {error ? (
         <P variant={"error"}>{error}</P>
       ) : (
         <>
@@ -30,15 +49,17 @@ export default function ProfileScreen() {
               <ProfileSkeleton />
             ) : (
               <>
-                <UserInfo user={user} />
-                <DeleteDialog
-                  handleAction={handleExit}
-                  description='You will be logged out of your account.'
-                />
+                <UserInfo user={currentProfile} />
+                {isOwnProfile && (
+                  <DeleteDialog
+                    handleAction={handleExit}
+                    description='You will be logged out of your account.'
+                  />
+                )}
               </>
             )}
           </section>
-          <UserInfluence />
+          {isUserInterface(currentProfile) && <UserInfluence />}
         </>
       )}
     </MainContainer>

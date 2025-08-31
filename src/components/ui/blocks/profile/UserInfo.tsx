@@ -2,22 +2,27 @@ import Image from "next/image";
 import React from "react";
 import { H1 } from "../../shared/text/H";
 import P from "../../shared/text/P";
-import { UserInterface } from "@/interfaces/user";
+import { CurrentProfileType, isUserInterface } from "@/types/user";
+import { getUserAvatar, getUserEmail, getUserName } from "@/utils/userGetInfo";
+import { Button } from "../../shared/buttons/button";
 
-export default function UserInfo({ user }: { user: UserInterface }) {
+export default function UserInfo({ user }: { user: CurrentProfileType }) {
   const userInfo = [
-    { name: "Email: ", value: user?.user_metadata.email },
-    { name: "Count of posts: ", value: user?.stats.posts_count },
-    { name: "Count of likes: ", value: user?.stats.likes_count },
-    { name: "Count of comments: ", value: user?.stats.comments_count },
+    { name: "Email: ", value: getUserEmail(user) },
+    { name: "Count of posts: ", value: user?.stats?.posts_count },
+    { name: "Count of likes: ", value: user?.stats?.likes_count },
+    { name: "Count of comments: ", value: user?.stats?.comments_count },
   ];
 
   return (
     <>
-      <H1>Hi, {user?.user_metadata.name}</H1>
+      <div className='flex items-center gap-8'>
+        <H1>Hi, {getUserName(user)}</H1>
+        {!isUserInterface(user) && <Button variant={"secondary"}>send a message</Button>}
+      </div>
       <div className='flex items-center lg:gap-5 gap-3'>
         <Image
-          src={user?.user_metadata.avatar_url ?? ""}
+          src={getUserAvatar(user)}
           width={196}
           height={196}
           alt='profile'
