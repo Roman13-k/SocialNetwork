@@ -5,7 +5,7 @@ export default function MainContainer({
   className,
 }: PropsWithChildren<{ className?: string }>) {
   return (
-    <div className={` bg-background-primary`}>
+    <div className={` bg-background-primary h-full`}>
       <div
         className={`${
           className ?? ""

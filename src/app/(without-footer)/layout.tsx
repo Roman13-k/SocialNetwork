@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Fira_Code } from "next/font/google";
-import "./globals.css";
-import Providers from "./providers";
-import Footer from "@/components/ui/layout/footer/Footer";
+import "../globals.css";
+import Providers from "../providers";
 import Header from "@/components/ui/layout/header/Header";
 
 export const inter = Inter({
@@ -23,7 +22,7 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
 };
 
-export default function RootLayout({
+export default function RootLayoutWithoutFooter({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -34,9 +33,7 @@ export default function RootLayout({
         <Providers>
           <div className='flex relative w-full'>
             <Header />
-            <div className='w-full'>
-              <main>{children}</main> <Footer />
-            </div>
+            <main className='w-full'>{children}</main>
           </div>
         </Providers>
       </body>
