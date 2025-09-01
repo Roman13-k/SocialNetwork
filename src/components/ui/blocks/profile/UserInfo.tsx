@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import React from "react";
 import { H1 } from "../../shared/text/H";
@@ -5,8 +6,15 @@ import P from "../../shared/text/P";
 import { CurrentProfileType, isUserInterface } from "@/types/user";
 import { getUserAvatar, getUserEmail, getUserName } from "@/utils/userGetInfo";
 import { Button } from "../../shared/buttons/button";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { getOrCreateNewChat } from "@/store/redusers/chatsReduser";
+import { useRouter } from "next/navigation";
 
 export default function UserInfo({ user }: { user: CurrentProfileType }) {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { loading, error } = useAppSelector((state) => state.chats);
+  const regProfileId = useAppSelector((state) => state?.user?.user?.id);
   const userInfo = [
     { name: "Email: ", value: getUserEmail(user) },
     { name: "Count of posts: ", value: user?.stats?.posts_count },
@@ -14,11 +22,23 @@ export default function UserInfo({ user }: { user: CurrentProfileType }) {
     { name: "Count of comments: ", value: user?.stats?.comments_count },
   ];
 
+  const handleCreateOrGoChat = async () => {
+    if (!user?.id || !regProfileId) return;
+
+    const chatId = await dispatch(getOrCreateNewChat({ userA: regProfileId, userB: user?.id }));
+    console.log(chatId.payload);
+    if (!error && !loading) router.push(`/chats/${chatId.payload}`);
+  };
+
   return (
     <>
-      <div className='flex items-center gap-8'>
+      <div className='flex sm:flex-row flex-col items-center gap-6'>
         <H1>Hi, {getUserName(user)}</H1>
-        {!isUserInterface(user) && <Button variant={"secondary"}>send a message</Button>}
+        {!isUserInterface(user) && (
+          <Button onClick={handleCreateOrGoChat} variant={"secondary"}>
+            send a message
+          </Button>
+        )}
       </div>
       <div className='flex items-center lg:gap-5 gap-3'>
         <Image
