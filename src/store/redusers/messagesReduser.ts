@@ -16,10 +16,18 @@ const initialState: MessageState = {
 export const messagesSlice = createSlice({
   name: "messages",
   initialState,
-  reducers: {},
+  reducers: {
+    messageReceived: (state, action) => {
+      state.messages.push(action.payload);
+    },
+
+    clearMessages: (state) => {
+      state.messages = [];
+    },
+  },
   extraReducers: (builder) => {},
 });
 
-export const {} = messagesSlice.actions;
+export const { messageReceived, clearMessages } = messagesSlice.actions;
 
 export default messagesSlice.reducer;

@@ -13,7 +13,6 @@ export default function Posts() {
 
   return (
     <RenderWithInfinityData
-      offset={offset}
       loading={postLoading || loading}
       callback={() => loadPosts({ userId: user?.id, offset })}>
       <ul className='flex flex-col gap-3 md:gap-5 w-full max-w-[650px]'>

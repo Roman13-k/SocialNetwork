@@ -5,15 +5,21 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface ChatState {
   chats: ChatInterface[];
+  activeChatId: string | null;
   loading: boolean;
+  offset: number | null;
   error: string | null;
 }
 
 const initialState: ChatState = {
   chats: [],
+  activeChatId: null,
   loading: false,
+  offset: 0,
   error: null,
 };
+
+const limit = 5;
 
 export const getOrCreateNewChat = createAsyncThunk<
   ChatInterface,
@@ -47,17 +53,21 @@ export const getOrCreateNewChat = createAsyncThunk<
 
 export const getUsersChats = createAsyncThunk<
   ChatInterface[],
-  { userId: string },
+  { userId: string; offset: number },
   { rejectValue: string }
->("/chats/getUsersChats", async ({ userId }, { rejectWithValue }) => {
-  const { data, error } = await supabase.from("chats").select(
-    `id,
+>("/chats/getUsersChats", async ({ userId, offset }, { rejectWithValue }) => {
+  const { data, error } = await supabase
+    .from("chats_with_last_message")
+    .select(
+      `id,
       created_at,
+      last_message,
       chat_participants (
         user_id,
         profiles ( id, username, avatar_url )
       )`,
-  );
+    )
+    .range(offset, offset + limit - 1);
 
   if (error) return rejectWithValue(error.message);
 
@@ -65,6 +75,7 @@ export const getUsersChats = createAsyncThunk<
   return data.map((chat) => ({
     id: chat.id,
     created_at: chat.created_at,
+    lastMessage: chat.last_message,
     participants: chat.chat_participants.map((p: any) => p.profiles).filter((u) => u.id !== userId),
   }));
 });
@@ -72,15 +83,27 @@ export const getUsersChats = createAsyncThunk<
 export const chatsSlice = createSlice({
   name: "chats",
   initialState,
-  reducers: {},
+  reducers: {
+    enterChat: (state, action) => {
+      state.activeChatId = action.payload;
+    },
+    leaveChat: (state) => {
+      state.activeChatId = null;
+    },
+  },
   extraReducers: (builder) => {
     addAsyncCase(builder, getOrCreateNewChat, () => {});
     addAsyncCase(builder, getUsersChats, (state, action) => {
-      state.chats = action.payload;
+      if (action.payload.length === 0) {
+        state.offset = null;
+      } else if (state.offset !== null) {
+        state.chats.push(...action.payload);
+        state.offset += limit;
+      }
     });
   },
 });
 
-export const {} = chatsSlice.actions;
+export const { enterChat, leaveChat } = chatsSlice.actions;
 
 export default chatsSlice.reducer;

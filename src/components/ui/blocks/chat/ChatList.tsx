@@ -1,31 +1,41 @@
 "use client";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useAppSelector } from "@/store/hooks";
 import { getUsersChats } from "@/store/redusers/chatsReduser";
 import React, { useEffect } from "react";
 import P from "../../shared/text/P";
+import ChatSkeleton from "../../shared/skeletons/ChatSkeleton";
+import ChatElement from "./ChatElement";
+import RenderWithInfinityData from "../../layout/RenderWithInfinityData";
 
 export default function ChatList() {
-  const dispatch = useAppDispatch();
-  const { chats, error, loading } = useAppSelector((state) => state.chats);
+  const { chats, error, loading, offset } = useAppSelector((state) => state.chats);
   const userId = useAppSelector((state) => state?.user?.user?.id);
 
-  useEffect(() => {
-    if (!userId) return;
+  const loadChats = () => {
+    if (offset === null || !userId) return;
 
-    dispatch(getUsersChats({ userId }));
-  }, [userId]);
+    return getUsersChats({ userId, offset });
+  };
+
+  useEffect(() => {
+    console.log(chats);
+  }, [chats]);
 
   return (
-    <aside className='w-[300px] bg-white rounded-tl-lg px-3 py-4'>
-      <div className='flex flex-col gap-3'>
+    <aside className='w-[350px] bg-white rounded-tl-lg px-4 py-5'>
+      <RenderWithInfinityData callback={loadChats} loading={loading}>
         {error ? (
-          <P>Error</P>
-        ) : loading ? (
-          <P>Loading</P>
+          <P variant={"error"}>{error}</P>
         ) : (
-          chats.map((chat) => <div key={chat.id}>{chat?.participants[0]?.username}</div>)
+          chats.map((chat) => <ChatElement key={chat.id} chat={chat} />)
         )}
-      </div>
+        {loading && (
+          <>
+            <ChatSkeleton />
+            <ChatSkeleton />
+          </>
+        )}
+      </RenderWithInfinityData>
     </aside>
   );
 }

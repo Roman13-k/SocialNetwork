@@ -4,6 +4,7 @@ import postsReducer, { postsSlice } from "./redusers/postsReduser";
 import commentsReducer, { commentsSlice } from "./redusers/commentsReduser";
 import messagesReducer, { messagesSlice } from "./redusers/messagesReduser";
 import chatsReducer, { chatsSlice } from "./redusers/chatsReduser";
+// import { messagesListener } from "./middleware/messageMiddleware";
 
 const rootReducer = combineReducers({
   [userSlice.name]: userReducer,
@@ -16,6 +17,8 @@ const rootReducer = combineReducers({
 export const makeStore = () => {
   return configureStore({
     reducer: rootReducer,
+    // middleware: (getDefaultMiddleware) =>
+    //   getDefaultMiddleware().prepend(messagesListener.middleware),
   });
 };
 

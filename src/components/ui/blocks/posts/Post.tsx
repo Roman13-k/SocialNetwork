@@ -34,7 +34,7 @@ export default function Post({ post }: { post: PostInterface }) {
           {/* Ссылка на профиль */}
           <Link
             className='md:mr-2 mr-1'
-            href={userId === post.user.id ? "/profile" : `/profile/${post.user.id}`}>
+            href={userId === post?.user?.id ? "/profile" : `/profile/${post?.user?.id}`}>
             <Image
               src={post?.user?.avatar_url ?? "/"}
               alt=''
@@ -45,7 +45,7 @@ export default function Post({ post }: { post: PostInterface }) {
           </Link>
 
           {/* Ссылка на пост */}
-          <Link className='flex-1 flex flex-col md:gap-2 gap-1' href={`/post/${post.id}`}>
+          <Link className='flex-1 flex flex-col md:gap-2 gap-1' href={`/post/${post?.id}`}>
             <div className='flex gap-2 text-[17px]'>
               <strong className='text-text-primary'>{post?.user?.username}</strong>
               <P variant={"secondary"}>· {postDateFormat(post?.created_at)}</P>

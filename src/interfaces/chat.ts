@@ -5,5 +5,5 @@ export interface ChatInterface {
   id: string;
   created_at: string;
   participants: UserMainInfo[];
-  last_message?: MessageInterface;
+  lastMessage?: MessageInterface;
 }

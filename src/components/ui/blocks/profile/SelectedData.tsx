@@ -35,13 +35,6 @@ export default function SelectedData({ selectedVariant }: { selectedVariant: Dat
   return (
     <RenderWithInfinityData
       callback={loadData}
-      offset={
-        selectedVariant === "posts"
-          ? userOffset
-          : selectedVariant === "likedPosts"
-          ? userLikedOffset
-          : offset
-      }
       loading={
         selectedVariant === "posts" || selectedVariant === "likedPosts" ? loading : commentsLoading
       }>

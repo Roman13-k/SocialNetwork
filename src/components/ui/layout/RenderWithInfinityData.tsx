@@ -9,14 +9,12 @@ type DispatchType = ThunkDispatch<RootState, unknown, UnknownAction>;
 
 interface RenderWithInfinitiDataProps {
   children: React.ReactNode;
-  offset: number | null;
   callback: () => Parameters<DispatchType>[0] | undefined;
   loading: boolean;
 }
 
 export default function RenderWithInfinityData({
   children,
-  offset,
   callback,
   loading,
 }: RenderWithInfinitiDataProps) {
@@ -24,11 +22,9 @@ export default function RenderWithInfinityData({
   const divRef = useRef<HTMLDivElement | null>(null);
 
   const loadMore = () => {
-    if (!loading && offset !== null) {
-      const action = callback();
-      if (action) {
-        dispatch(action);
-      }
+    const action = callback();
+    if (action) {
+      dispatch(action);
     }
   };
 

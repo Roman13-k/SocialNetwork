@@ -9,7 +9,7 @@ import P from "../ui/shared/text/P";
 import ProfileSkeleton from "../ui/shared/skeletons/ProfileSkeleton";
 import UserInfo from "../ui/blocks/profile/UserInfo";
 import UserInfluence from "../ui/blocks/profile/UserInfluence";
-import { CurrentProfileType, isUserInterface } from "@/types/user";
+import { isUserInterface } from "@/types/user";
 
 export default function ProfileScreen() {
   const path = usePathname();
@@ -30,10 +30,6 @@ export default function ProfileScreen() {
     dispatch(logoutUser());
     redirect("/");
   };
-
-  useEffect(() => {
-    console.log(profile);
-  }, [profile]);
 
   const isOwnProfile = !profileId;
   const currentProfile = isOwnProfile ? user : profile;
