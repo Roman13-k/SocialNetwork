@@ -3,10 +3,13 @@ import React, { PropsWithChildren } from "react";
 export default function ChatContainer({
   children,
   className,
-}: PropsWithChildren<{ className?: string }>) {
+  wrapper,
+}: PropsWithChildren<{ className?: string; wrapper?: string }>) {
   return (
     <div
-      className={` w-full bg-[url("/chatbg.jpg")] bg-no-repeat bg-center bg-cover rounded-tr-lg p-8`}>
+      className={`${
+        wrapper ?? ""
+      } w-full bg-[url("/chatbg.jpg")] bg-no-repeat bg-center bg-cover rounded-tl-lg md:rounded-tl-none rounded-tr-lg p-3 md:p-6 lg:p-8`}>
       <div className={`flex flex-col h-full gap-5 ${className ?? ""}`}>{children}</div>
     </div>
   );

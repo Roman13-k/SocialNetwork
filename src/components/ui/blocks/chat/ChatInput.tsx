@@ -19,14 +19,14 @@ export default function ChatInput({ handleNewMessage, message, setMessage }: Cha
             handleNewMessage();
           }
         }}
-        className='w-full py-3 px-2 pr-12 border-3 border-accent rounded-md transition-all focus:outline-none focus:ring-2 focus:ring-blue-500'
+        className='w-full md:py-3 py-1.5 px-2 md:pr-12 pr-6 border-3 border-accent rounded-md transition-all focus:outline-none focus:ring-2 focus:ring-blue-500'
         placeholder='Send a message...'
       />
       <button
         onClick={handleNewMessage}
         type='button'
         className='absolute right-3 top-1/2 -translate-y-1/2 text-accent hover:text-accent/90 cursor-pointer'>
-        <Send size={40} />
+        <Send size={35} />
       </button>
     </div>
   );

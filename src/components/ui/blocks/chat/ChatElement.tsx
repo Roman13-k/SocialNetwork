@@ -23,9 +23,9 @@ export default function ChatElement({ chat }: { chat: ChatInterface }) {
           width={40}
           height={40}
         />
-        <div className='flex flex-col gap-1'>
-          <P> {chat?.participants[0]?.username}</P>
-          <P variant={"secondary"} size={"xs"}>
+        <div className='flex flex-col gap-1 flex-1 min-w-0'>
+          <P>{chat?.participants[0]?.username}</P>
+          <P className='truncate' variant='secondary' size='xs'>
             {chat.lastMessage?.content ?? "Send first message"}
           </P>
         </div>

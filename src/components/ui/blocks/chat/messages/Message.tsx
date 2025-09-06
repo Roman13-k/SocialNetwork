@@ -14,7 +14,7 @@ export default function Message({ message, userId }: MessageProps) {
     <div
       className={`${
         message.sender_id === userId ? "bg-white ml-auto" : "bg-button/85"
-      } py-2 px-4 rounded-[20px] border border-border flex flex-col max-w-[85%]`}>
+      } py-1.5 md:py-2 md:px-4 px-2.5 rounded-[20px] border border-border flex flex-col max-w-[85%]`}>
       <P className='break-words'>{message.content}</P>
       <span
         className='self-end text-[14px] text-text-secondary'

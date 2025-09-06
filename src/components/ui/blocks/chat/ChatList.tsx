@@ -8,7 +8,7 @@ import ChatElement from "./ChatElement";
 import RenderWithInfinityData from "../../layout/RenderWithInfinityData";
 
 export default function ChatList() {
-  const { chats, error, loading, offset } = useAppSelector((state) => state.chats);
+  const { chats, error, loading, offset, activeChat } = useAppSelector((state) => state.chats);
   const userId = useAppSelector((state) => state?.user?.user?.id);
 
   const loadChats = () => {
@@ -18,7 +18,10 @@ export default function ChatList() {
   };
 
   return (
-    <aside className='w-[350px] bg-white rounded-tl-lg px-4 py-5'>
+    <aside
+      className={`${
+        activeChat ? "hidden" : "block w-full"
+      } lg:block lg:w-[300px] bg-white rounded-tl-lg px-4 py-5`}>
       <RenderWithInfinityData callback={loadChats} loading={loading}>
         {error ? (
           <P variant={"error"}>{error}</P>

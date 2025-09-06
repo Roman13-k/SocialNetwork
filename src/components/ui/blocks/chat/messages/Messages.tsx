@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import Message from "./Message";
 import P from "@/components/ui/shared/text/P";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -11,27 +11,31 @@ interface MessagesProps {
   userId: string | undefined;
   chatId: string;
   isToBootom: boolean;
+  setIsToBottom: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function Messages({ userId, chatId, isToBootom }: MessagesProps) {
+export default function Messages({ userId, chatId, isToBootom, setIsToBottom }: MessagesProps) {
   const { messages, offset, loading, error } = useAppSelector((state) => state.messages);
   const activeChat = useAppSelector((state) => state.chats.activeChat);
   const dispatch = useAppDispatch();
-
-  let lastDate = "";
-  const curDate = new Date();
-
   const messagesRef = useRef<HTMLDivElement | null>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (isToBootom) bottomRef.current?.scrollIntoView();
   }, [messages]);
 
   useEffect(() => {
+    if (offset === null || loading || error) return;
+    dispatch(loadMessages({ offset, chatId }));
+    setIsToBottom(true);
+  }, [chatId]);
+
+  useEffect(() => {
     const el = messagesRef.current;
     if (!el) return;
 
+    setIsToBottom(false);
     const handleScroll = () => {
       if (el.scrollTop < 100 && offset !== null && !loading && !error) {
         const prevHeight = el.scrollHeight;
@@ -50,10 +54,11 @@ export default function Messages({ userId, chatId, isToBootom }: MessagesProps) 
     };
 
     el.addEventListener("scroll", handleScroll);
-    return () => {
-      el.removeEventListener("scroll", handleScroll);
-    };
+    return () => el.removeEventListener("scroll", handleScroll);
   }, [chatId, offset, loading, error, dispatch]);
+
+  let lastDate = "";
+  const curDate = new Date();
 
   return (
     <div

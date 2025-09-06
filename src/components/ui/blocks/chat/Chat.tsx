@@ -1,9 +1,9 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ChatContainer from "../../shared/containers/ChatContainer";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { enterChat, leaveChat } from "@/store/redusers/chatsReduser";
-import { clearMessages, loadMessages, messageReceived } from "@/store/redusers/messagesReduser";
+import { clearMessages, messageReceived } from "@/store/redusers/messagesReduser";
 import { supabase } from "@/lib/supabaseClient";
 import Messages from "./messages/Messages";
 import { usePathname } from "next/navigation";
@@ -16,7 +16,6 @@ export default function Chat() {
   const [isToBootom, setIsToBottom] = useState(true);
   const { activeChat, chats } = useAppSelector((state) => state.chats);
   const userId = useAppSelector((state) => state.user.user?.id);
-  const { offset } = useAppSelector((state) => state.messages);
   const dispatch = useAppDispatch();
 
   const handleNewMessage = async () => {
@@ -34,9 +33,8 @@ export default function Chat() {
   };
 
   useEffect(() => {
-    if (!chatId || !chats || offset === null) return;
+    if (!chatId || !chats) return;
     dispatch(enterChat(chatId));
-    dispatch(loadMessages({ offset, chatId })).then(() => setIsToBottom(true));
   }, [chatId, chats]);
 
   useEffect(() => {
@@ -67,8 +65,13 @@ export default function Chat() {
   }, [activeChat, dispatch]);
 
   return (
-    <ChatContainer>
-      <Messages userId={userId} chatId={chatId} isToBootom={isToBootom} />
+    <ChatContainer className={`${activeChat ? "flex" : "hidden"} lg:flex`}>
+      <Messages
+        userId={userId}
+        chatId={chatId}
+        isToBootom={isToBootom}
+        setIsToBottom={setIsToBottom}
+      />
       <ChatInput handleNewMessage={handleNewMessage} message={message} setMessage={setMessage} />
     </ChatContainer>
   );
