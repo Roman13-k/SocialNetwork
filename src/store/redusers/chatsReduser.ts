@@ -1,11 +1,11 @@
 import { ChatInterface } from "@/interfaces/chat";
 import { supabase } from "@/lib/supabaseClient";
 import { addAsyncCase } from "@/utils/addAsyncCase";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface ChatState {
   chats: ChatInterface[];
-  activeChatId: string | null;
+  activeChat: ChatInterface | null;
   loading: boolean;
   offset: number | null;
   error: string | null;
@@ -13,7 +13,7 @@ interface ChatState {
 
 const initialState: ChatState = {
   chats: [],
-  activeChatId: null,
+  activeChat: null,
   loading: false,
   offset: 0,
   error: null,
@@ -85,20 +85,23 @@ export const chatsSlice = createSlice({
   initialState,
   reducers: {
     enterChat: (state, action) => {
-      state.activeChatId = action.payload;
+      const chat = state.chats.find((chat) => chat.id === action.payload);
+
+      state.activeChat = chat ?? null;
     },
     leaveChat: (state) => {
-      state.activeChatId = null;
+      state.activeChat = null;
     },
   },
   extraReducers: (builder) => {
     addAsyncCase(builder, getOrCreateNewChat, () => {});
     addAsyncCase(builder, getUsersChats, (state, action) => {
-      if (action.payload.length === 0) {
-        state.offset = null;
-      } else if (state.offset !== null) {
+      if (state.offset !== null) {
         state.chats.push(...action.payload);
         state.offset += limit;
+      }
+      if (action.payload.length < limit && state.chats.length !== 0) {
+        state.offset = null;
       }
     });
   },

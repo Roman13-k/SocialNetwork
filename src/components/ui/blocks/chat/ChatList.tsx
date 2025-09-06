@@ -1,7 +1,7 @@
 "use client";
 import { useAppSelector } from "@/store/hooks";
 import { getUsersChats } from "@/store/redusers/chatsReduser";
-import React, { useEffect } from "react";
+import React from "react";
 import P from "../../shared/text/P";
 import ChatSkeleton from "../../shared/skeletons/ChatSkeleton";
 import ChatElement from "./ChatElement";
@@ -17,15 +17,13 @@ export default function ChatList() {
     return getUsersChats({ userId, offset });
   };
 
-  useEffect(() => {
-    console.log(chats);
-  }, [chats]);
-
   return (
     <aside className='w-[350px] bg-white rounded-tl-lg px-4 py-5'>
       <RenderWithInfinityData callback={loadChats} loading={loading}>
         {error ? (
           <P variant={"error"}>{error}</P>
+        ) : chats.length === 0 ? (
+          <P>You don't have any chats yet</P>
         ) : (
           chats.map((chat) => <ChatElement key={chat.id} chat={chat} />)
         )}

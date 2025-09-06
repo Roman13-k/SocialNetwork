@@ -3,7 +3,8 @@ import { RefObject, useEffect, useRef } from "react";
 export function useObserver(
   callback: () => void,
   loading: boolean,
-  ref: RefObject<HTMLDivElement | null>,
+  ref: RefObject<HTMLDivElement | HTMLUListElement | null>,
+  options?: IntersectionObserverInit,
 ) {
   const observer = useRef<IntersectionObserver | null>(null);
   useEffect(() => {
@@ -18,7 +19,7 @@ export function useObserver(
       if (entries[0].isIntersecting) {
         callback();
       }
-    });
+    }, options);
     observer.current.observe(element);
 
     return () => {
@@ -26,5 +27,5 @@ export function useObserver(
         observer.current.unobserve(element);
       }
     };
-  }, [ref, callback, loading]);
+  }, [ref, options, loading, callback]);
 }

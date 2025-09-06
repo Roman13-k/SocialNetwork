@@ -1,30 +1,60 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ChatContainer from "../../shared/containers/ChatContainer";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { enterChat, leaveChat } from "@/store/redusers/chatsReduser";
-import { clearMessages, messageReceived } from "@/store/redusers/messagesReduser";
-import { usePathname } from "next/navigation";
+import { clearMessages, loadMessages, messageReceived } from "@/store/redusers/messagesReduser";
 import { supabase } from "@/lib/supabaseClient";
+import Messages from "./messages/Messages";
+import { usePathname } from "next/navigation";
+import ChatInput from "./ChatInput";
 
 export default function Chat() {
   const path = usePathname();
-  const segments = path.split("/");
-  const chatId = segments[2];
+  const chatId = path.split("/")[2];
+  const [message, setMessage] = useState("");
+  const [isToBootom, setIsToBottom] = useState(true);
+  const { activeChat, chats } = useAppSelector((state) => state.chats);
+  const userId = useAppSelector((state) => state.user.user?.id);
+  const { offset } = useAppSelector((state) => state.messages);
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (!chatId) return;
+  const handleNewMessage = async () => {
+    if (!message.trim() || !userId) return;
 
+    const { error } = await supabase.from("messages").insert([
+      {
+        chat_id: activeChat?.id,
+        sender_id: userId,
+        content: message,
+      },
+    ]);
+
+    if (!error) setMessage("");
+  };
+
+  useEffect(() => {
+    if (!chatId || !chats || offset === null) return;
     dispatch(enterChat(chatId));
+    dispatch(loadMessages({ offset, chatId })).then(() => setIsToBottom(true));
+  }, [chatId, chats]);
+
+  useEffect(() => {
+    if (!activeChat?.id) return;
 
     const channel = supabase
       .channel("public:messages")
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "messages", filter: `chat_id=eq.${chatId}` },
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "messages",
+          filter: `chat_id=eq.${activeChat.id}`,
+        },
         (payload) => {
           dispatch(messageReceived(payload.new));
+          setIsToBottom(true);
         },
       )
       .subscribe();
@@ -34,7 +64,12 @@ export default function Chat() {
       dispatch(clearMessages());
       supabase.removeChannel(channel);
     };
-  }, [chatId, dispatch]);
+  }, [activeChat, dispatch]);
 
-  return <ChatContainer>Chat</ChatContainer>;
+  return (
+    <ChatContainer>
+      <Messages userId={userId} chatId={chatId} isToBootom={isToBootom} />
+      <ChatInput handleNewMessage={handleNewMessage} message={message} setMessage={setMessage} />
+    </ChatContainer>
+  );
 }

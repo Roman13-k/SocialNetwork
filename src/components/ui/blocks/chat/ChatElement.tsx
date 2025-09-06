@@ -1,13 +1,19 @@
+"use client";
 import { ChatInterface } from "@/interfaces/chat";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import P from "../../shared/text/P";
+import { useAppSelector } from "@/store/hooks";
 
 export default function ChatElement({ chat }: { chat: ChatInterface }) {
+  const curChat = useAppSelector((state) => state.chats.activeChat);
+
   return (
     <Link
-      className='border-border border rounded-md px-3 py-2 bg-background-primary hover:bg-background-secondary w-full transition-colors'
+      className={`border-border border rounded-md px-3 py-2 hover:bg-background-secondary ${
+        curChat?.id === chat.id ? "bg-background-secondary" : "bg-background-primary"
+      } w-full transition-colors`}
       href={`/chats/${chat.id}`}>
       <div className='flex gap-2 items-center'>
         <Image
