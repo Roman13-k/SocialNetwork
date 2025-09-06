@@ -1,4 +1,4 @@
-import { UserInterface, UserStats } from "@/interfaces/user";
+import { UserStats } from "@/interfaces/user";
 
 export function mapUserWithStats<T extends { id: string }>(
   user: T,

@@ -1,7 +1,8 @@
 import { ChatInterface } from "@/interfaces/chat";
+import { UserMainInfo } from "@/interfaces/user";
 import { supabase } from "@/lib/supabaseClient";
 import { addAsyncCase } from "@/utils/addAsyncCase";
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface ChatState {
   chats: ChatInterface[];
@@ -71,12 +72,13 @@ export const getUsersChats = createAsyncThunk<
 
   if (error) return rejectWithValue(error.message);
 
-  // проблема типа supabase возвращ массив обектов
   return data.map((chat) => ({
     id: chat.id,
     created_at: chat.created_at,
     lastMessage: chat.last_message,
-    participants: chat.chat_participants.map((p: any) => p.profiles).filter((u) => u.id !== userId),
+    participants: chat.chat_participants
+      .map((p) => p.profiles as unknown as UserMainInfo)
+      .filter((u) => u.id !== userId),
   }));
 });
 

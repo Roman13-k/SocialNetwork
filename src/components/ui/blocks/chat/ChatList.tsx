@@ -26,7 +26,7 @@ export default function ChatList() {
         {error ? (
           <P variant={"error"}>{error}</P>
         ) : chats.length === 0 ? (
-          <P>You don't have any chats yet</P>
+          <P>You dont have any chats yet</P>
         ) : (
           chats.map((chat) => <ChatElement key={chat.id} chat={chat} />)
         )}
