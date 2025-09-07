@@ -65,7 +65,9 @@ export default function Chat() {
   }, [activeChat, dispatch]);
 
   return (
-    <ChatContainer className={`${activeChat ? "flex" : "hidden"} lg:flex`}>
+    <ChatContainer
+      wrapper={`${activeChat ? "flex" : "hidden"} lg:flex justify-center min-w-0 shrink-1`}
+      className='w-full min-w-0'>
       <Messages
         userId={userId}
         chatId={chatId}

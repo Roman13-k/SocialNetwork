@@ -23,10 +23,10 @@ export default function Messages({ userId, chatId, isToBootom, setIsToBottom }: 
 
   useEffect(() => {
     if (isToBootom) bottomRef.current?.scrollIntoView();
-  }, [messages]);
+  }, [messages, isToBootom]);
 
   useEffect(() => {
-    if (offset === null || loading || error) return;
+    if (offset === null || loading || error || messages.length !== 0) return;
     dispatch(loadMessages({ offset, chatId }));
     setIsToBottom(true);
   }, [chatId]);
@@ -35,19 +35,18 @@ export default function Messages({ userId, chatId, isToBootom, setIsToBottom }: 
     const el = messagesRef.current;
     if (!el) return;
 
-    setIsToBottom(false);
     const handleScroll = () => {
+      setIsToBottom(false);
       if (el.scrollTop < 100 && offset !== null && !loading && !error) {
         const prevHeight = el.scrollHeight;
+        const prevScrollTop = el.scrollTop;
 
         dispatch(loadMessages({ offset, chatId }))
           .unwrap()
           .then((newMessages) => {
             if (newMessages.length > 0) {
-              requestAnimationFrame(() => {
-                const newHeight = el.scrollHeight;
-                el.scrollTop = newHeight - prevHeight + el.scrollTop;
-              });
+              const newHeight = el.scrollHeight;
+              el.scrollTop = newHeight - prevHeight + prevScrollTop;
             }
           });
       }
@@ -55,7 +54,7 @@ export default function Messages({ userId, chatId, isToBootom, setIsToBottom }: 
 
     el.addEventListener("scroll", handleScroll);
     return () => el.removeEventListener("scroll", handleScroll);
-  }, [chatId, offset, loading, error, dispatch]);
+  }, [chatId, offset, loading, error]);
 
   let lastDate = "";
   const curDate = new Date();
@@ -63,8 +62,8 @@ export default function Messages({ userId, chatId, isToBootom, setIsToBottom }: 
   return (
     <div
       ref={messagesRef}
-      className='h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200'>
-      <ul className='flex flex-col items-center gap-2 py-5 max-w-[768px] mx-auto'>
+      className='h-full flex-1 min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200'>
+      <ul className='flex flex-col items-center gap-2 py-5 max-w-[768px] mx-auto min-w-0'>
         {messages.map((message, index) => {
           const rafMessageDate = new Date(message.created_at);
           const diffDays = daysBetween(curDate, rafMessageDate);
@@ -91,16 +90,16 @@ export default function Messages({ userId, chatId, isToBootom, setIsToBottom }: 
           return (
             <React.Fragment key={message.id}>
               {showHeader && (
-                <div className='bg-gray-100 rounded-full px-2 py-1'>
+                <li className='bg-gray-100 rounded-full px-2 py-1'>
                   <P variant={"secondary"} size={"xs"}>
                     {messageDate}
                   </P>
-                </div>
+                </li>
               )}
               <li
                 className={`${
                   message.sender_id === userId ? "self-end " : "self-start"
-                } flex gap-2 w-[85%] relative`}>
+                } flex gap-2  w-[85%] relative`}>
                 {showFooter && (
                   <Image
                     className='rounded-full self-end absolute top-1/2 left-[-50px]'

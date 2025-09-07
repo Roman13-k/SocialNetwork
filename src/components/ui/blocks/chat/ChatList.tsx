@@ -21,7 +21,7 @@ export default function ChatList() {
     <aside
       className={`${
         activeChat ? "hidden" : "block w-full"
-      } lg:block lg:w-[300px] bg-white rounded-tl-lg px-4 py-5`}>
+      } lg:block lg:w-[300px] bg-white rounded-tl-lg min-w-0 shrink-0 px-4 py-5`}>
       <RenderWithInfinityData callback={loadChats} loading={loading}>
         {error ? (
           <P variant={"error"}>{error}</P>

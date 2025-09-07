@@ -30,6 +30,11 @@
   --font-mono: "Fira Code", monospace;
 }
 
+html,
+body {
+  overflow-x: hidden;
+}
+
 li {
   list-style: none;
 }

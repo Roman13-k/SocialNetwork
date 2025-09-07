@@ -33,7 +33,7 @@ export default function Header() {
       {loginModal && <LoginModal setLoginModal={setLoginModal} />}
       {/* десктоп */}
       <header
-        className={`hidden md:flex flex-col gap-10 py-5 px-4 bg-background-secondary border-border border-r border-y rounded-r-md min-h-screen w-[80px] hover:w-[260px] transition-all   
+        className={`hidden md:flex flex-col gap-10 py-5 px-4 bg-background-secondary border-border border-r border-y rounded-r-md min-h-screen w-[80px] shrink-0 hover:w-[260px] transition-all   
          duration-300 overflow-hidden`}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}>
