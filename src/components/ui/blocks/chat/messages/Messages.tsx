@@ -1,9 +1,9 @@
 "use client";
-import React, { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useMemo, useRef } from "react";
 import Message from "./Message";
 import P from "@/components/ui/shared/text/P";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import Image from "next/image";
+// import Image from "next/image";
 import { daysBetween } from "@/utils/chatDateFormat";
 import { loadMessages } from "@/store/redusers/messagesReduser";
 
@@ -16,7 +16,7 @@ interface MessagesProps {
 
 export default function Messages({ userId, chatId, isToBootom, setIsToBottom }: MessagesProps) {
   const { messages, offset, loading, error } = useAppSelector((state) => state.messages);
-  const activeChat = useAppSelector((state) => state.chats.activeChat);
+  // const activeChat = useAppSelector((state) => state.chats.activeChat);
   const dispatch = useAppDispatch();
   const messagesRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -59,12 +59,10 @@ export default function Messages({ userId, chatId, isToBootom, setIsToBottom }: 
   let lastDate = "";
   const curDate = new Date();
 
-  return (
-    <div
-      ref={messagesRef}
-      className='h-full flex-1 min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200'>
+  const messagesList = useMemo(() => {
+    return (
       <ul className='flex flex-col items-center gap-2 py-5 max-w-[768px] mx-auto min-w-0'>
-        {messages.map((message, index) => {
+        {messages.map((message) => {
           const rafMessageDate = new Date(message.created_at);
           const diffDays = daysBetween(curDate, rafMessageDate);
 
@@ -82,10 +80,10 @@ export default function Messages({ userId, chatId, isToBootom, setIsToBottom }: 
           const showHeader = messageDate !== lastDate;
           if (showHeader) lastDate = messageDate;
 
-          const nextMessage = messages[index + 1];
-          const showFooter =
-            message.sender_id !== userId &&
-            (!nextMessage || nextMessage.sender_id !== message.sender_id);
+          // const nextMessage = messages[index + 1];
+          // const showFooter =
+          //   message.sender_id !== userId &&
+          //   (!nextMessage || nextMessage.sender_id !== message.sender_id);
 
           return (
             <React.Fragment key={message.id}>
@@ -100,7 +98,7 @@ export default function Messages({ userId, chatId, isToBootom, setIsToBottom }: 
                 className={`${
                   message.sender_id === userId ? "self-end " : "self-start"
                 } flex gap-2  w-[85%] relative`}>
-                {showFooter && (
+                {/* {showFooter && (
                   <Image
                     className='rounded-full self-end absolute top-1/2 left-[-50px]'
                     src={activeChat?.participants[0].avatar_url ?? "/default-avatar.png"}
@@ -108,13 +106,21 @@ export default function Messages({ userId, chatId, isToBootom, setIsToBottom }: 
                     width={40}
                     height={40}
                   />
-                )}
+                )} */}
                 <Message userId={userId} message={message} />
               </li>
             </React.Fragment>
           );
         })}
       </ul>
+    );
+  }, [messages]);
+
+  return (
+    <div
+      ref={messagesRef}
+      className='h-full flex-1 min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200'>
+      {messagesList}
       <div ref={bottomRef} className='block'></div>
     </div>
   );

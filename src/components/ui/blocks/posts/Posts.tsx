@@ -15,13 +15,13 @@ export default function Posts() {
     <RenderWithInfinityData
       loading={postLoading || loading}
       callback={() => loadPosts({ userId: user?.id, offset })}>
-      <ul className='flex flex-col gap-3 md:gap-5 w-full max-w-[650px]'>
+      <ul className='flex flex-col items-center gap-3 md:gap-5 w-full'>
         {posts?.map((post) => (
-          <Post key={post.id} post={post} />
+          <Post key={post.id} post={post} type={"posts"} />
         ))}
       </ul>
       {postLoading && (
-        <ul className='flex flex-col gap-3 md:gap-5 w-full max-w-[650px]'>
+        <ul className='flex flex-col items-center gap-3 md:gap-5 w-full'>
           {Array.from({ length: 3 }, (_, index) => (
             <PostSkeleton key={index} />
           ))}

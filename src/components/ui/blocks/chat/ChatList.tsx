@@ -25,8 +25,10 @@ export default function ChatList() {
       <RenderWithInfinityData callback={loadChats} loading={loading}>
         {error ? (
           <P variant={"error"}>{error}</P>
-        ) : chats.length === 0 ? (
-          <P>You dont have any chats yet</P>
+        ) : chats.length === 0 && !loading ? (
+          <P variant={"secondary"} size={"xs"}>
+            You dont have any chats yet
+          </P>
         ) : (
           chats.map((chat) => <ChatElement key={chat.id} chat={chat} />)
         )}

@@ -16,8 +16,12 @@ export default function Comments({ postId }: { postId: string }) {
     };
   }, [dispatch]);
 
+  const loadMore = () => {
+    if (offset !== null) return loadComments({ offset, postId });
+  };
+
   return (
-    <RenderWithInfinityData callback={() => loadComments({ offset, postId })} loading={loading}>
+    <RenderWithInfinityData callback={loadMore} loading={loading}>
       <ul className='flex flex-col gap-3 md:gap-5 w-full max-w-[650px]'>
         {comments.map((comment) => (
           <Comment key={comment.id} comment={comment} />

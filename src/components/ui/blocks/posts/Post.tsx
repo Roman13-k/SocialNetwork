@@ -10,26 +10,26 @@ import NewCommentModal from "../comments/NewCommentModal";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { createNewComment } from "@/store/redusers/commentsReduser";
 import P from "../../shared/text/P";
+import { PostsType, updateCommentsCout } from "@/store/redusers/postsReduser";
 
-export default function Post({ post }: { post: PostInterface }) {
+export default function Post({ post, type }: { post: PostInterface; type?: PostsType }) {
   const [commentModal, setCommentModal] = useState(false);
-  const [commentsCount, setCommentsCount] = useState<number>(post?.comments?.[0]?.count ?? 0);
   const dispatch = useAppDispatch();
-  const commentError = useAppSelector((state) => state.comments.error);
+  const { error: commentError } = useAppSelector((state) => state.comments);
   const userId = useAppSelector((state) => state.user.user?.id);
 
   const handleNewComment = async (content: string) => {
     if (!userId) return;
     await dispatch(createNewComment({ content, user_id: userId, post_id: post.id }));
     if (!commentError) {
-      setCommentsCount((prev) => prev + 1);
+      dispatch(updateCommentsCout({ count: 1, postId: post.id, type }));
       setCommentModal(false);
     }
   };
 
   return (
     <>
-      <li className='lg:px-5 md:px-4 px-3 lg:py-3 py-2 border-border border rounded-md w-full transition-all hover:bg-background-secondary/80 cursor-pointer'>
+      <li className='lg:px-5 md:px-4 px-3 lg:py-3 py-2 border-border border rounded-md w-full max-w-[650px] transition-all hover:bg-background-secondary/80 cursor-pointer'>
         <div className='flex items-start'>
           {/* Ссылка на профиль */}
           <Link
@@ -69,7 +69,7 @@ export default function Post({ post }: { post: PostInterface }) {
                     width={540}
                     height={540}
                     className={`
-                    object-cover rounded-2xl w-full h-full border-2 border-accent/15
+                    object-contain rounded-2xl w-full h-full max-h-[650px] border-2 border-accent/15
                     ${post?.image_url?.length === 3 && i === 0 ? "col-span-2 row-span-2" : ""}
                     ${post?.image_url?.length === 3 && i > 0 ? "w-full h-full" : ""}
                   `}
@@ -85,7 +85,10 @@ export default function Post({ post }: { post: PostInterface }) {
                 count={post?.likes?.[0].count}
                 liked_by_user={post?.liked_by_user}
               />
-              <CommentButton setCommentModal={setCommentModal} count={commentsCount} />
+              <CommentButton
+                setCommentModal={setCommentModal}
+                count={post?.comments?.[0]?.count ?? 0}
+              />
             </div>
           </Link>
         </div>

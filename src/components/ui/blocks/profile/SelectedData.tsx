@@ -38,11 +38,11 @@ export default function SelectedData({ selectedVariant }: { selectedVariant: Dat
       loading={
         selectedVariant === "posts" || selectedVariant === "likedPosts" ? loading : commentsLoading
       }>
-      <ul className='flex flex-col gap-3 md:gap-5 w-full max-w-[650px]'>
+      <ul className='flex flex-col items-center gap-3 md:gap-5 w-full'>
         {selectedVariant === "posts"
-          ? userPosts.map((post) => <Post key={post.id} post={post} />)
+          ? userPosts.map((post) => <Post key={post.id} post={post} type='userPosts' />)
           : selectedVariant === "likedPosts"
-          ? userLikedPosts.map((post) => <Post key={post.id} post={post} />)
+          ? userLikedPosts.map((post) => <Post key={post.id} post={post} type='userLikedPosts' />)
           : comments.map((com) => <Comment comment={com} key={com.id} />)}
       </ul>
 

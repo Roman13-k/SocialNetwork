@@ -3,10 +3,9 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 import ModalContainer from "../../shared/containers/ModalContainer";
 import { Button } from "../../shared/buttons/button";
 import { Textarea } from "../../shared/textarea";
-import { Input } from "../../shared/input";
 import { useAppSelector } from "@/store/hooks";
-import P from "../../shared/text/P";
 import { H3 } from "../../shared/text/H";
+import FileInput from "../../shared/inputs/FileInput";
 
 interface NewPostModalProps {
   setPostModal: Dispatch<SetStateAction<boolean>>;
@@ -19,26 +18,6 @@ export default function NewPostModal({ setPostModal, handleNewPost }: NewPostMod
   const [files, setFiles] = useState<File[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const handleValidateFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) return;
-
-    const selectedFiles = Array.from(e.target.files);
-    if (selectedFiles.length > 3) {
-      setError("The number of files is not more than 3");
-      setFiles([]);
-      return;
-    }
-    const totalSize = selectedFiles.reduce((acc, file) => acc + file.size, 0);
-    if (totalSize > 2 * 1024 * 1024) {
-      setError("The size of files not more than 2 MB.");
-      setFiles([]);
-      return;
-    }
-
-    setError(null);
-    setFiles(selectedFiles);
-  };
-
   return (
     <ModalContainer onClose={() => setPostModal(false)}>
       <H3>New Post</H3>
@@ -49,8 +28,7 @@ export default function NewPostModal({ setPostModal, handleNewPost }: NewPostMod
         onChange={(e) => setContent(e.currentTarget.value)}
       />
 
-      <Input type='file' accept='image/*' multiple onChange={handleValidateFiles} />
-      {error && <P variant={"error"}>{error}</P>}
+      <FileInput setError={setError} setFiles={setFiles} files={files} error={error} />
 
       <Button
         className='w-[100px] sm:w-[130px] flex justify-center items-center gap-2'

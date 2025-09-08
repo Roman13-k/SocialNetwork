@@ -1,9 +1,11 @@
 import { PostInterface } from "@/interfaces/post";
 import { supabase } from "@/lib/supabaseClient";
 import { addAsyncCase } from "@/utils/addAsyncCase";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const limit = 5;
+
+export type PostsType = "userPosts" | "userLikedPosts" | "posts";
 
 interface PostState {
   posts: PostInterface[];
@@ -21,7 +23,7 @@ const initialState: PostState = {
   posts: [],
   userLikedPosts: [],
   userPosts: [],
-  currentPost: {} as PostInterface,
+  currentPost: { comments: [{ count: 0 }] } as PostInterface,
   loading: false,
   error: null,
   offset: 0,
@@ -45,8 +47,6 @@ const postInformation = `
   ),
   image_url
 `;
-
-//? select возвращает массив обектов что не всегда верно
 
 export const createNewPost = createAsyncThunk<
   PostInterface[],
@@ -201,6 +201,19 @@ export const postsSlice = createSlice({
     setLoading: (state) => {
       state.loading = true;
     },
+    updateCommentsCout: (
+      state,
+      action: PayloadAction<{ count: number; postId?: string; type?: PostsType }>,
+    ) => {
+      const { count, postId, type } = action.payload;
+      if (postId && type) {
+        const post = state[type].find((post) => post.id === postId);
+        if (post?.comments?.[0]) {
+          post.comments[0].count += count;
+        }
+      }
+      state.currentPost.comments[0].count += count;
+    },
   },
   extraReducers: (builder) => {
     addAsyncCase(builder, createNewPost, (state, action) => {
@@ -239,6 +252,6 @@ export const postsSlice = createSlice({
   },
 });
 
-export const { setLoading } = postsSlice.actions;
+export const { setLoading, updateCommentsCout } = postsSlice.actions;
 
 export default postsSlice.reducer;

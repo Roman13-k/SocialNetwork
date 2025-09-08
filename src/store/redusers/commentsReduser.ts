@@ -61,10 +61,9 @@ export const deleteCommentById = createAsyncThunk<string, string, { rejectValue:
 
 export const loadComments = createAsyncThunk<
   CommentInterface[],
-  { offset: number | null; postId: string },
+  { offset: number; postId: string },
   { rejectValue: string }
 >("comments/loadComments", async ({ offset, postId }, { rejectWithValue }) => {
-  if (offset === null) return rejectWithValue("Offset is null");
   try {
     const { data, error } = await supabase
       .from("comments")
@@ -108,9 +107,7 @@ export const commentsSlice = createSlice({
   },
   extraReducers: (builder) => {
     addAsyncCase(builder, createNewComment, (state, action) => {
-      if (state.comments.length != 0) {
-        state.comments.unshift(action.payload);
-      }
+      state.comments.unshift(action.payload);
     });
     addAsyncCase(builder, deleteCommentById, (state, action) => {
       state.comments = state.comments.filter((comment) => comment.id !== action.payload);

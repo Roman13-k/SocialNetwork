@@ -7,9 +7,12 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 - [Next.js 15](https://nextjs.org) (App Router)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
+- [Redux Toolkit](https://redux-toolkit.js.org/)
+- [Zod](https://zod.dev/)
+- [Motion One](https://motion.dev/) in the future
 - [shadcn/ui](https://ui.shadcn.com/) UI lib
 - [Supabase](https://supabase.com/) as backend & database
-- [pnpm](https://pnpm.io) as package manager
+- [pnpm](https://pnpm.io)
 
 ## Getting Started
 
@@ -26,5 +29,12 @@ pnpm dev
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_if_needed
-NEXT_PUBLIC_HOST_URL=http://your_host_url
+NEXT_PUBLIC_HOST_URL=https://your_host_url
 ```
+
+## Deploy on Vercel
+
+The project is deployed using [Vercel](https://vercel.com)
+, which allows the application to be automatically built and updated with every push to the repository.
+
+🔗 Live website: [https://socialnetwork-chi.vercel.app/](https://socialnetwork-chi.vercel.app/)

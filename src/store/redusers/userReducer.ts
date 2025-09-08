@@ -72,9 +72,7 @@ export const getProfileById = createAsyncThunk<
   { rejectValue: string }
 >("user/getProfileById", async (userId, { rejectWithValue }) => {
   const { data, error } = await supabase
-    .from("profiles")
-    .select("id, username, avatar_url")
-    .eq("id", userId)
+    .rpc("get_full_user", { p_user_id: userId })
     .single<UserMainInfo>();
 
   if (error) return rejectWithValue(error.message);

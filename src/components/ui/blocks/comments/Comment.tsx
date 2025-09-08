@@ -8,17 +8,19 @@ import React from "react";
 import DeleteDialog from "../../shared/dialog/DeleteDialog";
 import P from "../../shared/text/P";
 import Link from "next/link";
+import { updateCommentsCout } from "@/store/redusers/postsReduser";
 
 export default function Comment({ comment }: { comment: CommentInterface }) {
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state?.user?.user?.id);
 
-  const hadleDeleteComment = () => {
-    dispatch(deleteCommentById(comment.id));
+  const hadleDeleteComment = async () => {
+    const result = await dispatch(deleteCommentById(comment.id));
+    if (deleteCommentById.fulfilled.match(result)) dispatch(updateCommentsCout({ count: -1 }));
   };
 
   return (
-    <li className='flex items-start md:px-5 px-3 md:py-3 py-2 border-border border rounded-md w-full transition-all hover:bg-background-secondary/80'>
+    <li className='flex items-start md:px-5 px-3 md:py-3 py-2 border-border border rounded-md w-full max-w-[650px] transition-all hover:bg-background-secondary/80'>
       <Link
         href={userId === comment.user_id ? "/profile" : `/profile/${comment.user_id}`}
         className='mr-2'>

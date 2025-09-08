@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Skeleton } from "../../shared/skeletons/skeleton";
 import { H2 } from "../../shared/text/H";
+import { CircleUserRound } from "lucide-react";
 
 export default function UserNav({
   setLoginModal,
@@ -35,7 +36,7 @@ export default function UserNav({
         {loading ? (
           <Skeleton className='h-[44px] w-[44px] rounded-full' />
         ) : user == null ? (
-          <Image src={"/user.png"} width={64} height={64} alt='profile' />
+          <CircleUserRound size={64} />
         ) : (
           <Link onClick={() => (setBurgerMenu ? setBurgerMenu(false) : "")} href={"/profile"}>
             <Image
