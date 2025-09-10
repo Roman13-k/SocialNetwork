@@ -28,7 +28,6 @@ export default function UserInfo({ user }: { user: CurrentProfileType }) {
     if (!user?.id || !regProfileId) return;
 
     const chatId = await dispatch(getOrCreateNewChat({ userA: regProfileId, userB: user?.id }));
-    console.log(chatId.payload);
     if (!error && !loading) router.push(`/chats/${chatId.payload}`);
   };
 

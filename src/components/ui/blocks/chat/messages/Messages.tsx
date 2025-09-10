@@ -61,7 +61,7 @@ export default function Messages({ userId, chatId, isToBootom, setIsToBottom }: 
 
   const messagesList = useMemo(() => {
     return (
-      <ul className='flex flex-col items-center gap-2 py-5 max-w-[768px] mx-auto min-w-0'>
+      <ul className='flex flex-col items-center gap-2 py-5 max-w-[768px] w-full mx-auto min-w-0'>
         {messages.map((message) => {
           const rafMessageDate = new Date(message.created_at);
           const diffDays = daysBetween(curDate, rafMessageDate);
@@ -97,7 +97,7 @@ export default function Messages({ userId, chatId, isToBootom, setIsToBottom }: 
               <li
                 className={`${
                   message.sender_id === userId ? "self-end " : "self-start"
-                } flex gap-2  w-[85%] relative`}>
+                } flex gap-2 w-full relative max-w-[85%]`}>
                 {/* {showFooter && (
                   <Image
                     className='rounded-full self-end absolute top-1/2 left-[-50px]'
@@ -107,6 +107,7 @@ export default function Messages({ userId, chatId, isToBootom, setIsToBottom }: 
                     height={40}
                   />
                 )} */}
+
                 <Message userId={userId} message={message} />
               </li>
             </React.Fragment>

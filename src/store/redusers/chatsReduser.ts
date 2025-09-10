@@ -27,14 +27,12 @@ export const getOrCreateNewChat = createAsyncThunk<
   { userA: string; userB: string },
   { rejectValue: string }
 >("/chats/getOrCreateNewChat", async ({ userA, userB }, { rejectWithValue }) => {
-  const { data: existing, error: findError } = await supabase
-    .from("chats")
-    .select("id, chat_participants!inner(user_id)")
-    .in("chat_participants.user_id", [userA, userB])
-    .maybeSingle();
+  const { data: existing, error: findError } = await supabase.rpc("get_chat_with_users", {
+    user_ids: [userA, userB],
+  });
   if (findError) return rejectWithValue(findError.message);
-  if (existing) {
-    return existing.id;
+  if (existing && existing?.length) {
+    return existing[0].chat_id;
   }
 
   const { data: newChat, error: chatError } = await supabase

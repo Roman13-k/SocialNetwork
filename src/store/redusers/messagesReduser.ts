@@ -47,6 +47,9 @@ export const messagesSlice = createSlice({
     clearMessages: (state) => {
       state.messages = [];
     },
+    incrOffset: (state) => {
+      if (state.offset !== null) state.offset += 1;
+    },
   },
   extraReducers: (builder) => {
     addAsyncCase(builder, loadMessages, (state, action) => {
@@ -60,6 +63,6 @@ export const messagesSlice = createSlice({
   },
 });
 
-export const { messageReceived, clearMessages } = messagesSlice.actions;
+export const { messageReceived, clearMessages, incrOffset } = messagesSlice.actions;
 
 export default messagesSlice.reducer;

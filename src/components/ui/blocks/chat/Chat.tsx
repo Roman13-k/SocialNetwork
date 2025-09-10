@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import ChatContainer from "../../shared/containers/ChatContainer";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { enterChat, leaveChat } from "@/store/redusers/chatsReduser";
-import { clearMessages, messageReceived } from "@/store/redusers/messagesReduser";
+import { clearMessages, incrOffset, messageReceived } from "@/store/redusers/messagesReduser";
 import { supabase } from "@/lib/supabaseClient";
 import Messages from "./messages/Messages";
 import { usePathname } from "next/navigation";
@@ -29,7 +29,10 @@ export default function Chat() {
       },
     ]);
 
-    if (!error) setMessage("");
+    if (!error) {
+      dispatch(incrOffset());
+      setMessage("");
+    }
   };
 
   useEffect(() => {
@@ -66,8 +69,8 @@ export default function Chat() {
 
   return (
     <ChatContainer
-      wrapper={`${activeChat ? "flex" : "hidden"} lg:flex justify-center min-w-0 shrink-1`}
-      className='w-full min-w-0'>
+      wrapper={`${activeChat ? "flex" : "hidden"} lg:flex justify-center w-full min-w-0`}
+      className='min-w-0 w-full'>
       <Messages
         userId={userId}
         chatId={chatId}
