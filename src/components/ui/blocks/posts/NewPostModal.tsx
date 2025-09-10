@@ -35,10 +35,8 @@ export default function NewPostModal({ setPostModal, handleNewPost }: NewPostMod
         size='lg'
         variant='secondary'
         onClick={() => handleNewPost(content, files)}
-        disabled={!!error || !content.trim() || loading}>
-        {loading && (
-          <span className='w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin'></span>
-        )}
+        disabled={!!error || !content.trim() || loading}
+        loading={loading}>
         Create
       </Button>
     </ModalContainer>

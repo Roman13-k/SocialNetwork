@@ -39,13 +39,17 @@ export default function UserNav({
           <CircleUserRound size={64} />
         ) : (
           <Link onClick={() => (setBurgerMenu ? setBurgerMenu(false) : "")} href={"/profile"}>
-            <Image
-              src={user.user_metadata.avatar_url ?? ""}
-              width={64}
-              height={64}
-              alt='profile'
-              className='rounded-full'
-            />
+            {user.user_metadata.avatar_url ? (
+              <Image
+                src={user.user_metadata.avatar_url}
+                width={64}
+                height={64}
+                alt='profile'
+                className='rounded-full'
+              />
+            ) : (
+              <CircleUserRound size={48} />
+            )}
           </Link>
         )}
         {hover && (

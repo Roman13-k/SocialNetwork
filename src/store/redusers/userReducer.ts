@@ -25,44 +25,55 @@ export const loginUser = createAsyncThunk<
   LoginProviderType,
   { rejectValue: string }
 >("user/loginUser", async (provider, { rejectWithValue }) => {
-  try {
-    const { error } = await supabase.auth.signInWithOAuth({ provider });
-    if (error) throw error;
+  const { error } = await supabase.auth.signInWithOAuth({ provider });
+  if (error) return rejectWithValue(error.message);
 
-    const { data: sessionData, error: userError } = await supabase.auth.getUser();
-    if (userError) throw userError;
-    if (!sessionData.user) return null;
+  const { data: sessionData, error: userError } = await supabase.auth.getUser();
+  if (userError) return rejectWithValue(userError.message);
+  if (!sessionData.user) return null;
+  return mapUserWithStats(sessionData.user);
+});
 
-    return mapUserWithStats(sessionData.user);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Error";
-    return rejectWithValue(message);
-  }
+export const loginWithEmail = createAsyncThunk<
+  UserInterface | null,
+  { email: string; password: string },
+  { rejectValue: string }
+>("user/loginWithEmail", async ({ email, password }, { rejectWithValue }) => {
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) return rejectWithValue(error.message);
+  if (!data.user) return null;
+  return mapUserWithStats(data.user);
+});
+
+export const registerUser = createAsyncThunk<
+  UserInterface | null,
+  { email: string; password: string },
+  { rejectValue: string }
+>("user/registerUser", async ({ email, password }, { rejectWithValue }) => {
+  const { data, error } = await supabase.auth.signUp({ email, password });
+  if (error) return rejectWithValue(error.message);
+  if (!data.user) return null;
+  return mapUserWithStats(data.user);
 });
 
 export const fetchSession = createAsyncThunk<UserInterface | null, void, { rejectValue: string }>(
   "user/fetchSessionWithStats",
-  async (_, { rejectWithValue }) => {
-    try {
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession();
-      if (error) throw error;
-      if (!session?.user) return null;
+  async () => {
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.getSession();
+    if (error) throw error;
+    if (!session?.user) return null;
 
-      const userId = session.user.id;
+    const userId = session.user.id;
 
-      const { data: statsData, error: statsError } = await supabase.rpc("get_user_stats", {
-        p_user_id: userId,
-      });
-      if (statsError) throw statsError;
+    const { data: statsData, error: statsError } = await supabase.rpc("get_user_stats", {
+      p_user_id: userId,
+    });
+    if (statsError) throw statsError;
 
-      return mapUserWithStats(session.user, statsData?.[0]);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "Error";
-      return rejectWithValue(message);
-    }
+    return mapUserWithStats(session.user, statsData?.[0]);
   },
 );
 
@@ -99,6 +110,12 @@ export const userSlice = createSlice({
     addAsyncCase(builder, loginUser, (state, action) => {
       state.user = action.payload;
     }),
+      addAsyncCase(builder, loginWithEmail, (state, action) => {
+        state.user = action.payload;
+      }),
+      addAsyncCase(builder, registerUser, (state, action) => {
+        state.user = action.payload;
+      }),
       addAsyncCase(builder, fetchSession, (state, action) => {
         state.user = action.payload;
         if (!action.payload) {

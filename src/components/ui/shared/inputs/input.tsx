@@ -1,20 +1,32 @@
 import * as React from "react";
-
 import { cn } from "@/lib/utils";
+import P from "../text/P";
 
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+function Input({
+  className,
+  error,
+  type,
+  ...props
+}: React.ComponentProps<"input"> & { error?: string }) {
   return (
-    <input
-      type={type}
-      data-slot='input'
-      className={cn(
-        "file:text-text-primary text-text-secondary file:inline-flex file:h-7 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-secondary border-border flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-        "aria-invalid:ring-destructive/20 aria-invalid:border-destructive",
-        className,
+    <label className='flex flex-col gap-0.5'>
+      <input
+        type={type}
+        data-slot='input'
+        className={cn(
+          "file:text-text-primary text-text-secondary file:inline-flex file:h-7 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-secondary border-border flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+          "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
+          "aria-invalid:ring-destructive/20 aria-invalid:border-destructive",
+          className,
+        )}
+        {...props}
+      />
+      {error && (
+        <P variant={"error"} size={"xs"}>
+          {error}
+        </P>
       )}
-      {...props}
-    />
+    </label>
   );
 }
 

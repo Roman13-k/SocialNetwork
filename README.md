@@ -9,9 +9,10 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Redux Toolkit](https://redux-toolkit.js.org/)
 - [Zod](https://zod.dev/)
+- [react-hook-form](https://react-hook-form.com/)
 - [Motion One](https://motion.dev/) in the future
-- [shadcn/ui](https://ui.shadcn.com/) UI lib
-- [Supabase](https://supabase.com/) as backend & database
+- [shadcn/ui](https://ui.shadcn.com/)
+- [Supabase](https://supabase.com/)
 - [pnpm](https://pnpm.io)
 
 ## Getting Started

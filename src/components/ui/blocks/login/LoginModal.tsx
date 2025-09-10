@@ -1,11 +1,12 @@
 "use cleint";
-import React, { Dispatch, SetStateAction } from "react";
-import Image from "next/image";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { useAppDispatch } from "@/store/hooks";
-import { loginUser } from "@/store/redusers/userReducer";
-import { LoginProviderType } from "@/types/login";
+import { loginUser, loginWithEmail, registerUser } from "@/store/redusers/userReducer";
+import { LoginFormType, LoginProviderType } from "@/types/login";
 import ModalContainer from "../../shared/containers/ModalContainer";
 import { H4 } from "../../shared/text/H";
+import EmailRegOrLog from "./EmailRegOrLog";
+import ProvidersLogin from "./ProvidersLogin";
 
 export default function LoginModal({
   setLoginModal,
@@ -13,23 +14,36 @@ export default function LoginModal({
   setLoginModal: Dispatch<SetStateAction<boolean>>;
 }) {
   const dispatch = useAppDispatch();
+  const [isRegister, setIsRegister] = useState(true);
 
-  const handleLogin = (provider: LoginProviderType) => {
+  const handleLoginOrRegUser = async (data: LoginFormType) => {
+    const { email, password } = data;
+    try {
+      if (isRegister) {
+        await dispatch(registerUser({ email, password })).unwrap();
+      } else {
+        await dispatch(loginWithEmail({ email, password })).unwrap();
+      }
+      setLoginModal(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleLoginProvider = (provider: LoginProviderType) => {
     dispatch(loginUser(provider));
     setLoginModal(false);
   };
 
   return (
     <ModalContainer onClose={() => setLoginModal(false)}>
-      <H4>Login</H4>
-      <div className='flex gap-5'>
-        <button onClick={() => handleLogin("google")} className='cursor-pointer'>
-          <Image width={64} height={64} src={"/google.svg"} alt='google.svg' />
-        </button>
-        <button onClick={() => handleLogin("github")} className='cursor-pointer'>
-          <Image width={64} height={64} src={"/github.svg"} alt='github.svg' />
-        </button>
-      </div>
+      <H4>{isRegister ? "Register" : "Login"}</H4>
+      <EmailRegOrLog
+        isRegister={isRegister}
+        setIsRegister={setIsRegister}
+        handleLoginOrRegUser={handleLoginOrRegUser}
+      />
+      <ProvidersLogin handleLoginProvider={handleLoginProvider} />
     </ModalContainer>
   );
 }

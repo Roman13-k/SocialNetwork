@@ -19,23 +19,19 @@ export default function NewCommentModal({
   return (
     <ModalContainer onClose={() => setCommentModal(false)}>
       <H4>Сomment on this</H4>
-
       <Textarea
         className='resize min-w-[200px] border-border border rounded-md p-2'
         value={content}
         onChange={(e) => setContent(e.currentTarget.value)}
       />
-
       {error && <P variant={"error"}>{error}</P>}
       <Button
         className='w-[130px] flex justify-center items-center gap-2'
         size='lg'
         variant='secondary'
         onClick={() => handleNewComment(content)}
-        disabled={!content.trim() || loading}>
-        {loading && (
-          <span className='w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin'></span>
-        )}
+        disabled={!content.trim() || loading}
+        loading={loading}>
         Create
       </Button>
     </ModalContainer>

@@ -9,6 +9,7 @@ import CommentSkeleton from "../../shared/skeletons/CommentSkeleton";
 import Comment from "../comments/Comment";
 import { loadUserComments, resetComments } from "@/store/redusers/commentsReduser";
 import RenderWithInfinityData from "../../layout/RenderWithInfinityData";
+import P from "../../shared/text/P";
 
 export default function SelectedData({ selectedVariant }: { selectedVariant: DataVariantsType }) {
   const { loading, userLikedPosts, userLikedOffset, userOffset, userPosts } = useAppSelector(
@@ -39,11 +40,29 @@ export default function SelectedData({ selectedVariant }: { selectedVariant: Dat
         selectedVariant === "posts" || selectedVariant === "likedPosts" ? loading : commentsLoading
       }>
       <ul className='flex flex-col items-center gap-3 md:gap-5 w-full'>
-        {selectedVariant === "posts"
-          ? userPosts.map((post) => <Post key={post.id} post={post} type='userPosts' />)
-          : selectedVariant === "likedPosts"
-          ? userLikedPosts.map((post) => <Post key={post.id} post={post} type='userLikedPosts' />)
-          : comments.map((com) => <Comment comment={com} key={com.id} />)}
+        {selectedVariant === "posts" ? (
+          userPosts.length > 0 ? (
+            userPosts.map((post) => <Post key={post.id} post={post} type='userPosts' />)
+          ) : (
+            <li>
+              <P variant={"secondary"}>No posts</P>
+            </li>
+          )
+        ) : selectedVariant === "likedPosts" ? (
+          userLikedPosts.length > 0 ? (
+            userLikedPosts.map((post) => <Post key={post.id} post={post} type='userLikedPosts' />)
+          ) : (
+            <li>
+              <P variant={"secondary"}>No liked posts</P>
+            </li>
+          )
+        ) : comments.length > 0 ? (
+          comments.map((com) => <Comment comment={com} key={com.id} />)
+        ) : (
+          <li>
+            <P variant={"secondary"}>No comments</P>
+          </li>
+        )}
       </ul>
 
       <ul className='flex flex-col gap-3 md:gap-5 w-full max-w-[650px]'>
