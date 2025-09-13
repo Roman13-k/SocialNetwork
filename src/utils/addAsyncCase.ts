@@ -1,7 +1,5 @@
 import { ErrorState } from "@/interfaces";
 import { ActionReducerMapBuilder, AsyncThunk, Draft, PayloadAction } from "@reduxjs/toolkit";
-import { AuthError } from "@supabase/supabase-js";
-import { mapAuthError } from "./mapAuthError";
 
 interface AsyncBaseState {
   loading: boolean;

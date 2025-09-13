@@ -59,9 +59,9 @@ export default function Messages({ userId, chatId, isToBootom, setIsToBottom }: 
     return () => el.removeEventListener("scroll", handleScroll);
   }, [chatId, offset, loading, error]);
 
-  let lastDate = "";
-
   const messagesList = useMemo(() => {
+    let lastDate = "";
+    
     return (
       <ul className='flex flex-col items-center gap-2 py-5 max-w-[768px] w-full mx-auto min-w-0'>
         {messages.map((message) => {

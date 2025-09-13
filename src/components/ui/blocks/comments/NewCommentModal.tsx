@@ -27,7 +27,7 @@ export default function NewCommentModal({
         maxChars={400}
         onValidateError={(err) => setContentError(err)}
       />
-      {error && <P variant={"error"}>{error}</P>}
+      {error && <P variant={"error"}>{error.message}</P>}
       <Button
         className='w-[130px] flex justify-center items-center gap-2'
         size='lg'

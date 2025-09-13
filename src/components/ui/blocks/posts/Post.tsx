@@ -12,6 +12,7 @@ import { createNewComment } from "@/store/redusers/commentsReduser";
 import P from "../../shared/text/P";
 import { PostsType, updateCommentsCout } from "@/store/redusers/postsReduser";
 import { profanity } from "@/lib/profanity";
+import RenderContentWithLinks from "../../layout/RenderContentWithLinks";
 
 export default function Post({ post, type }: { post: PostInterface; type?: PostsType }) {
   const [commentModal, setCommentModal] = useState(false);
@@ -45,14 +46,16 @@ export default function Post({ post, type }: { post: PostInterface; type?: Posts
             />
           </Link>
 
-          {/* Ссылка на пост */}
-          <Link className='flex-1 flex flex-col md:gap-2 gap-1' href={`/post/${post?.id}`}>
-            <div className='flex gap-2 text-[17px]'>
-              <strong className='text-text-primary'>{post?.user?.username}</strong>
-              <P variant={"secondary"}>· {postDateFormat(post?.created_at)}</P>
-            </div>
+          <div className='flex-1 flex flex-col md:gap-2 gap-1'>
+            {/* Ссылка на пост */}
+            <Link href={`/post/${post?.id}`}>
+              <div className='flex gap-2 text-[17px]'>
+                <strong className='text-text-primary'>{post?.user?.username}</strong>
+                <P variant={"secondary"}>· {postDateFormat(post?.created_at)}</P>
+              </div>
+            </Link>
 
-            <P variant={"secondary"}>{profanity.censor(post?.content)}</P>
+            <RenderContentWithLinks content={profanity.censor(post?.content)} />
 
             {post?.image_url && post?.image_url?.length > 0 && (
               <div
@@ -91,7 +94,7 @@ export default function Post({ post, type }: { post: PostInterface; type?: Posts
                 count={post?.comments?.[0]?.count ?? 0}
               />
             </div>
-          </Link>
+          </div>
         </div>
       </li>
 

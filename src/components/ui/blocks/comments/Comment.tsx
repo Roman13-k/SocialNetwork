@@ -10,6 +10,7 @@ import P from "../../shared/text/P";
 import Link from "next/link";
 import { updateCommentsCout } from "@/store/redusers/postsReduser";
 import { profanity } from "@/lib/profanity";
+import RenderContentWithLinks from "../../layout/RenderContentWithLinks";
 
 export default function Comment({ comment }: { comment: CommentInterface }) {
   const dispatch = useAppDispatch();
@@ -49,8 +50,7 @@ export default function Comment({ comment }: { comment: CommentInterface }) {
             />
           )}
         </div>
-
-        <P variant={"secondary"}>{profanity.censor(comment?.content)}</P>
+        <RenderContentWithLinks content={profanity.censor(comment?.content)} />
       </div>
     </li>
   );
