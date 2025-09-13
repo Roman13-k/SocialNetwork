@@ -1,12 +1,14 @@
+import { ErrorState } from "@/interfaces";
 import { CommentInterface } from "@/interfaces/comment";
 import { supabase } from "@/lib/supabaseClient";
 import { addAsyncCase } from "@/utils/addAsyncCase";
+import { mapAuthError } from "@/utils/mapAuthError";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface commentsState {
   comments: CommentInterface[];
   loading: boolean;
-  error: string | null;
+  error: ErrorState | null;
   offset: number | null;
 }
 
@@ -29,60 +31,47 @@ const commentInformation = `*,
 export const createNewComment = createAsyncThunk<
   CommentInterface,
   { user_id: string; content: string; post_id: string },
-  { rejectValue: string }
+  { rejectValue: ErrorState }
 >("comments/createNewComment", async ({ user_id, content, post_id }, { rejectWithValue }) => {
-  try {
-    const { error, data } = await supabase
-      .from("comments")
-      .insert([{ user_id, content, post_id }])
-      .select(commentInformation)
-      .single();
+  const { error, data } = await supabase
+    .from("comments")
+    .insert([{ user_id, content, post_id }])
+    .select(commentInformation)
+    .single();
 
-    if (error) throw error;
-
-    return data;
-  } catch (error) {
-    return rejectWithValue((error as Error).message);
-  }
+  if (error) return rejectWithValue(mapAuthError(error));
+  return data;
 });
 
-export const deleteCommentById = createAsyncThunk<string, string, { rejectValue: string }>(
+export const deleteCommentById = createAsyncThunk<string, string, { rejectValue: ErrorState }>(
   "comments/deleteCommentById",
   async (commentId, { rejectWithValue }) => {
-    try {
-      const { error } = await supabase.from("comments").delete().eq("id", commentId);
-      if (error) throw error;
-      return commentId;
-    } catch (err) {
-      return rejectWithValue((err as Error).message);
-    }
+    const { error } = await supabase.from("comments").delete().eq("id", commentId);
+    if (error) return rejectWithValue(mapAuthError(error));
+    return commentId;
   },
 );
 
 export const loadComments = createAsyncThunk<
   CommentInterface[],
   { offset: number; postId: string },
-  { rejectValue: string }
+  { rejectValue: ErrorState }
 >("comments/loadComments", async ({ offset, postId }, { rejectWithValue }) => {
-  try {
-    const { data, error } = await supabase
-      .from("comments")
-      .select(commentInformation)
-      .eq("post_id", postId)
-      .range(offset, offset + limit - 1)
-      .order("created_at", { ascending: false });
-    if (error) throw error;
+  const { data, error } = await supabase
+    .from("comments")
+    .select(commentInformation)
+    .eq("post_id", postId)
+    .range(offset, offset + limit - 1)
+    .order("created_at", { ascending: false });
+  if (error) return rejectWithValue(mapAuthError(error));
 
-    return data;
-  } catch (err) {
-    return rejectWithValue((err as Error).message);
-  }
+  return data;
 });
 
 export const loadUserComments = createAsyncThunk<
   CommentInterface[],
   { offset: number; userId?: string },
-  { rejectValue: string }
+  { rejectValue: ErrorState }
 >("comments/loadUserComments", async ({ offset, userId }, { rejectWithValue }) => {
   const { data, error } = await supabase
     .from("comments")
@@ -90,8 +79,7 @@ export const loadUserComments = createAsyncThunk<
     .eq("user_id", userId)
     .range(offset, offset + limit - 1)
     .order("created_at", { ascending: false });
-
-  if (error) return rejectWithValue(error.message);
+  if (error) return rejectWithValue(mapAuthError(error));
 
   return data;
 });

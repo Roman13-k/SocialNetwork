@@ -44,9 +44,11 @@ export default function EmailRegOrLog({
       <Button loading={loading} disabled={loading} variant={"secondary"} type='submit'>
         {isRegister ? "Register" : "Login"}
       </Button>
-      {error && (
-        <P variant={"error"} size={"xs"}>
-          {error}
+      {(error?.code === "invalid_credentials" || error?.code === "user_already_exists") && (
+        <P className='text-center' variant={"error"} size={"xs"}>
+          {error?.code === "invalid_credentials"
+            ? "Incorrect login or password"
+            : "User already registered"}
         </P>
       )}
       <button

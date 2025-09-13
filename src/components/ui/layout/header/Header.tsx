@@ -19,13 +19,15 @@ export default function Header() {
   }, [dispatch]);
 
   useEffect(() => {
+    const root = document.documentElement;
+
     if (burgerMenu) {
-      document.body.classList.add("overflow-hidden");
+      root.classList.add("overflow-hidden");
     } else {
-      document.body.classList.remove("overflow-hidden");
+      root.classList.remove("overflow-hidden");
     }
 
-    return () => document.body.classList.remove("overflow-hidden");
+    return () => root.classList.remove("overflow-hidden");
   }, [burgerMenu]);
 
   return (
@@ -54,7 +56,7 @@ export default function Header() {
       <header
         className={`${
           burgerMenu ? "scale-100" : "scale-0"
-        } w-full h-full z-50 absolute top-0 left-0 md:hidden flex flex-col items-center gap-6 py-5 px-4 bg-background-secondary transition-all   
+        } w-full h-screen z-50 fixed inset-0 md:hidden flex flex-col items-center gap-6 py-5 px-4 bg-background-secondary transition-all   
          duration-300 overflow-hidden`}>
         <Button
           onClick={() => setBurgerMenu(false)}

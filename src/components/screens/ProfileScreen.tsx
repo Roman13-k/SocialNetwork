@@ -35,9 +35,9 @@ export default function ProfileScreen() {
   const currentProfile = isOwnProfile ? user : profile;
 
   return (
-    <MainContainer className='min-h-[95dvh]'>
+    <MainContainer className='min-h-[100dvh]'>
       {error ? (
-        <P variant={"error"}>{error}</P>
+        <P variant={"error"}>{error.message}</P>
       ) : (
         <>
           <section className='flex flex-col justify-start items-start gap-4 lg:gap-10 lg:p-12 md:p-8 pb-4'>

@@ -1,12 +1,14 @@
+import { ErrorState } from "@/interfaces";
 import { MessageInterface } from "@/interfaces/message";
 import { supabase } from "@/lib/supabaseClient";
 import { addAsyncCase } from "@/utils/addAsyncCase";
+import { mapAuthError } from "@/utils/mapAuthError";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface MessageState {
   messages: MessageInterface[];
   loading: boolean;
-  error: string | null;
+  error: ErrorState | null;
   offset: number | null;
 }
 
@@ -22,7 +24,7 @@ const limit = 10;
 export const loadMessages = createAsyncThunk<
   MessageInterface[],
   { offset: number; chatId: string },
-  { rejectValue: string }
+  { rejectValue: ErrorState }
 >("/messages/loadMessages", async ({ offset, chatId }, { rejectWithValue }) => {
   const { data, error } = await supabase
     .from("messages")
@@ -31,7 +33,7 @@ export const loadMessages = createAsyncThunk<
     .order("created_at", { ascending: false })
     .range(offset, offset + limit - 1);
 
-  if (error) return rejectWithValue(error.message);
+  if (error) return rejectWithValue(mapAuthError(error));
 
   return data.reverse();
 });

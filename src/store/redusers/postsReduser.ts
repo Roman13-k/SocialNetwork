@@ -1,6 +1,8 @@
+import { ErrorState } from "@/interfaces";
 import { PostInterface } from "@/interfaces/post";
 import { supabase } from "@/lib/supabaseClient";
 import { addAsyncCase } from "@/utils/addAsyncCase";
+import { mapAuthError } from "@/utils/mapAuthError";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const limit = 5;
@@ -13,7 +15,7 @@ interface PostState {
   userLikedPosts: PostInterface[];
   currentPost: PostInterface;
   loading: boolean;
-  error: string | null;
+  error: ErrorState | null;
   offset: number | null;
   userOffset: number | null;
   userLikedOffset: number | null;
@@ -51,100 +53,80 @@ const postInformation = `
 export const createNewPost = createAsyncThunk<
   PostInterface[],
   { content: string; userId: string; image_url?: string[]; postId: string },
-  { rejectValue: string }
+  { rejectValue: ErrorState }
 >("posts/createNewPost", async ({ content, userId, image_url, postId }, { rejectWithValue }) => {
-  try {
-    const { data, error } = await supabase
-      .from("posts")
-      .insert([{ content, user_id: userId, image_url, id: postId }])
-      .select(postInformation);
+  const { data, error } = await supabase
+    .from("posts")
+    .insert([{ content, user_id: userId, image_url, id: postId }])
+    .select(postInformation);
+  if (error) return rejectWithValue(mapAuthError(error));
 
-    if (error) throw error;
-
-    return data.map((post) => ({
-      ...post,
-      liked_by_user: false,
-      user: Array.isArray(post.user) ? post.user[0] : post.user,
-    }));
-  } catch (err) {
-    return rejectWithValue((err as Error).message);
-  }
+  return data.map((post) => ({
+    ...post,
+    liked_by_user: false,
+    user: Array.isArray(post.user) ? post.user[0] : post.user,
+  }));
 });
 
 export const deletePostById = createAsyncThunk<
   string,
   { postId: string; image_url: string[] | undefined },
-  { rejectValue: string }
+  { rejectValue: ErrorState }
 >("posts/deletePost", async ({ postId, image_url }, { rejectWithValue }) => {
-  try {
-    if (image_url && image_url?.length !== 0) {
-      for (const url of image_url) {
-        const parts = url.split("/public/posts-images/");
-        await supabase.storage.from("posts-images").remove([parts[1]]);
-      }
+  if (image_url && image_url?.length !== 0) {
+    for (const url of image_url) {
+      const parts = url.split("/public/posts-images/");
+      await supabase.storage.from("posts-images").remove([parts[1]]);
     }
-
-    const { error } = await supabase.from("posts").delete().eq("id", postId);
-    if (error) throw error;
-
-    return postId;
-  } catch (err) {
-    return rejectWithValue((err as Error).message);
   }
+  const { error } = await supabase.from("posts").delete().eq("id", postId);
+  if (error) return rejectWithValue(mapAuthError(error));
+
+  return postId;
 });
 
 export const loadPosts = createAsyncThunk<
   PostInterface[],
-  { userId?: string; offset: number | null },
-  { rejectValue: string }
+  { userId?: string; offset: number },
+  { rejectValue: ErrorState }
 >("posts/loadPosts", async ({ userId, offset }, { rejectWithValue }) => {
-  if (offset === null) return rejectWithValue("Offset is null");
-  try {
-    const { data, error } = await supabase
-      .from("posts")
-      .select(postInformation)
-      .range(offset, offset + limit - 1)
-      .order("created_at", { ascending: false });
-    if (error) throw error;
+  const { data, error } = await supabase
+    .from("posts")
+    .select(postInformation)
+    .range(offset, offset + limit - 1)
+    .order("created_at", { ascending: false });
+  if (error) return rejectWithValue(mapAuthError(error));
 
-    return data.map((post) => ({
-      ...post,
-      liked_by_user: userId ? post.liked_by_user.some((like) => like.user_id === userId) : false,
-      user: Array.isArray(post.user) ? post.user[0] : post.user,
-    }));
-  } catch (err) {
-    return rejectWithValue((err as Error).message);
-  }
+  return data.map((post) => ({
+    ...post,
+    liked_by_user: userId ? post.liked_by_user.some((like) => like.user_id === userId) : false,
+    user: Array.isArray(post.user) ? post.user[0] : post.user,
+  }));
 });
 
 export const getPostById = createAsyncThunk<
   PostInterface,
   { id: string; userId?: string },
-  { rejectValue: string }
+  { rejectValue: ErrorState }
 >("posts/getPostById", async ({ id, userId }, { rejectWithValue }) => {
-  try {
-    const { data, error } = await supabase
-      .from("posts")
-      .select(postInformation)
-      .eq("id", id)
-      .single();
+  const { data, error } = await supabase
+    .from("posts")
+    .select(postInformation)
+    .eq("id", id)
+    .single();
+  if (error) return rejectWithValue(mapAuthError(error));
 
-    if (error) throw error;
-
-    return {
-      ...data,
-      liked_by_user: userId ? data.liked_by_user.some((like) => like.user_id === userId) : false,
-      user: Array.isArray(data.user) ? data.user[0] : data.user,
-    };
-  } catch (err) {
-    return rejectWithValue((err as Error).message);
-  }
+  return {
+    ...data,
+    liked_by_user: userId ? data.liked_by_user.some((like) => like.user_id === userId) : false,
+    user: Array.isArray(data.user) ? data.user[0] : data.user,
+  };
 });
 
 export const loadUserPosts = createAsyncThunk<
   PostInterface[],
   { userId?: string; offset: number },
-  { rejectValue: string }
+  { rejectValue: ErrorState }
 >("posts/loadUserPosts", async ({ userId, offset }, { rejectWithValue }) => {
   const { data, error } = await supabase
     .from("posts")
@@ -152,8 +134,7 @@ export const loadUserPosts = createAsyncThunk<
     .eq("user_id", userId)
     .range(offset, offset + limit - 1)
     .order("created_at", { ascending: false });
-
-  if (error) return rejectWithValue(error.message);
+  if (error) return rejectWithValue(mapAuthError(error));
   if (!data) return [];
 
   return data.map((post) => ({
@@ -166,7 +147,7 @@ export const loadUserPosts = createAsyncThunk<
 export const loadUserLikedPosts = createAsyncThunk<
   PostInterface[],
   { userId?: string; offset: number },
-  { rejectValue: string }
+  { rejectValue: ErrorState }
 >("posts/loadUserLikedPosts", async ({ userId, offset }, { rejectWithValue }) => {
   const { data, error } = await supabase
     .from("likes")
@@ -180,8 +161,7 @@ export const loadUserLikedPosts = createAsyncThunk<
     .eq("user_id", userId)
     .range(offset, offset + limit - 1)
     .order("created_at", { ascending: false });
-
-  if (error) return rejectWithValue(error.message);
+  if (error) return rejectWithValue(mapAuthError(error));
   if (!data) return [];
 
   return data.map((item) => {

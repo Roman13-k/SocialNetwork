@@ -15,6 +15,7 @@ export default function NewCommentModal({
 }) {
   const { loading, error } = useAppSelector((state) => state.comments);
   const [content, setContent] = useState("");
+  const [contentError, setContentError] = useState(false);
 
   return (
     <ModalContainer onClose={() => setCommentModal(false)}>
@@ -23,6 +24,8 @@ export default function NewCommentModal({
         className='resize min-w-[200px] border-border border rounded-md p-2'
         value={content}
         onChange={(e) => setContent(e.currentTarget.value)}
+        maxChars={400}
+        onValidateError={(err) => setContentError(err)}
       />
       {error && <P variant={"error"}>{error}</P>}
       <Button
@@ -30,7 +33,7 @@ export default function NewCommentModal({
         size='lg'
         variant='secondary'
         onClick={() => handleNewComment(content)}
-        disabled={!content.trim() || loading}
+        disabled={!content.trim() || loading || contentError}
         loading={loading}>
         Create
       </Button>

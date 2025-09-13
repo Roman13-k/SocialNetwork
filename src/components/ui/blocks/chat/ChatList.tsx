@@ -1,7 +1,7 @@
 "use client";
 import { useAppSelector } from "@/store/hooks";
 import { getUsersChats } from "@/store/redusers/chatsReduser";
-import React, { useEffect } from "react";
+import React from "react";
 import P from "../../shared/text/P";
 import ChatSkeleton from "../../shared/skeletons/ChatSkeleton";
 import ChatElement from "./ChatElement";
@@ -24,7 +24,7 @@ export default function ChatList() {
       } lg:block lg:w-[300px] bg-white rounded-tl-lg min-w-0 shrink-0 px-4 py-5`}>
       <RenderWithInfinityData callback={loadChats} loading={loading}>
         {error ? (
-          <P variant={"error"}>{error}</P>
+          <P variant={"error"}>{error.message}</P>
         ) : chats.length === 0 && !loading ? (
           <P variant={"secondary"} size={"xs"}>
             You dont have any chats yet

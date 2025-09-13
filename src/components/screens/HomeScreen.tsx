@@ -45,7 +45,7 @@ export default function HomeScreen() {
   return (
     <>
       {postModal && <NewPostModal setPostModal={setPostModal} handleNewPost={handleNewPost} />}
-      <MainContainer className='lg:gap-10 md:gap-8 gap-6 '>
+      <MainContainer className='lg:gap-10 md:gap-8 gap-6 min-h-[100dvh]'>
         <Intro />
         <NewPost setPostModal={setPostModal} />
         <Posts />

@@ -26,8 +26,9 @@ export default function NewPostModal({ setPostModal, handleNewPost }: NewPostMod
         className='resize min-w-[140px] sm:min-w-[200px] border-border border rounded-md p-2'
         value={content}
         onChange={(e) => setContent(e.currentTarget.value)}
+        onValidateError={(err) => setError(err ? "Too many characters" : null)}
+        maxChars={700}
       />
-
       <FileInput setError={setError} setFiles={setFiles} files={files} error={error} />
 
       <Button

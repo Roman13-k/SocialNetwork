@@ -1,13 +1,16 @@
+import { ErrorState } from "@/interfaces";
 import { ActionReducerMapBuilder, AsyncThunk, Draft, PayloadAction } from "@reduxjs/toolkit";
+import { AuthError } from "@supabase/supabase-js";
+import { mapAuthError } from "./mapAuthError";
 
 interface AsyncBaseState {
   loading: boolean;
-  error: string | null;
+  error: ErrorState | null;
 }
 
 export function addAsyncCase<State extends AsyncBaseState, Returned, Arg = void>(
   builder: ActionReducerMapBuilder<State>,
-  thunk: AsyncThunk<Returned, Arg, { rejectValue: string }>,
+  thunk: AsyncThunk<Returned, Arg, { rejectValue: ErrorState }>,
   onFullfiled: (state: Draft<State>, action: PayloadAction<Returned>) => void,
 ) {
   builder
@@ -21,6 +24,7 @@ export function addAsyncCase<State extends AsyncBaseState, Returned, Arg = void>
     })
     .addCase(thunk.rejected, (state, action) => {
       state.loading = false;
-      state.error = (action.payload as string) || action.error.message || "Error";
+      if (!action.payload) state.error = null;
+      else state.error = action.payload;
     });
 }

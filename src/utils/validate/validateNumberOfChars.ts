@@ -1,5 +1,5 @@
 import z from "zod";
 
-export const validateNumberOfChars = (value: string): boolean => {
-  return z.string().min(1).max(500).safeParse(value).success;
+export const validateNumberOfChars = (value: string, max: number = 500): boolean => {
+  return z.string().min(1).max(max).safeParse(value).success;
 };

@@ -37,7 +37,7 @@ export default function PostScreen() {
   };
 
   return (
-    <MainContainer>
+    <MainContainer className='min-h-[100dvh]'>
       <div className='flex flex-col items-center md:gap-8 gap-4 lg:gap-10 pt-10'>
         <nav className='text-sm text-text-secondary mb-4 font-medium text-[18px] self-start'>
           <Link
