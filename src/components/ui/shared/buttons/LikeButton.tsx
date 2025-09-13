@@ -48,6 +48,7 @@ export default function LikeButton({ post_id, user_id, count, liked_by_user }: L
             alt='likes'
             width={22}
             height={20}
+            style={{ height: "auto", width: "auto" }}
             className='lg:scale-100 scale-80'
           />
         ) : (
@@ -56,6 +57,7 @@ export default function LikeButton({ post_id, user_id, count, liked_by_user }: L
             alt='likes'
             width={22}
             height={20}
+            style={{ height: "auto", width: "auto" }}
             className='lg:scale-100 scale-80'
           />
         )}

@@ -17,7 +17,7 @@ interface ChatState {
 const initialState: ChatState = {
   chats: [],
   activeChat: null,
-  loading: true,
+  loading: false,
   offset: 0,
   error: null,
 };
@@ -25,31 +25,24 @@ const initialState: ChatState = {
 const limit = 5;
 
 export const getOrCreateNewChat = createAsyncThunk<
-  ChatInterface,
+  string,
   { userA: string; userB: string },
   { rejectValue: ErrorState }
 >("/chats/getOrCreateNewChat", async ({ userA, userB }, { rejectWithValue }) => {
-  const { data: existing, error: findError } = await supabase.rpc("get_chat_with_users", {
-    user_ids: [userA, userB],
-  });
-  if (findError) return rejectWithValue(mapAuthError(findError));
-  if (existing && existing?.length) {
-    return existing[0].chat_id;
+  try {
+    const res = await fetch("/api/getOrCreateChat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userA, userB }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) return rejectWithValue(data.error);
+
+    return data.chatId;
+  } catch (err) {
+    return rejectWithValue(err as ErrorState);
   }
-
-  const { data: newChat, error: chatError } = await supabase
-    .from("chats")
-    .insert({})
-    .select("id")
-    .single();
-  if (chatError) return rejectWithValue(mapAuthError(chatError));
-
-  const { error: participantsError } = await supabase
-    .from("chat_participants")
-    .insert([{ chat_id: newChat.id, user_id: userB }]);
-  if (participantsError) return rejectWithValue(mapAuthError(participantsError));
-
-  return newChat.id;
 });
 
 export const getUsersChats = createAsyncThunk<

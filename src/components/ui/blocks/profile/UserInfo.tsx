@@ -36,7 +36,11 @@ export default function UserInfo({ user }: { user: CurrentProfileType }) {
       <div className='flex sm:flex-row flex-col items-center gap-6'>
         <H1>Hi, {getUserName(user)}</H1>
         {!isUserInterface(user) && (
-          <Button onClick={handleCreateOrGoChat} variant={"secondary"}>
+          <Button
+            disabled={loading || !!error || !regProfileId}
+            loading={loading}
+            onClick={handleCreateOrGoChat}
+            variant={"secondary"}>
             send a message
           </Button>
         )}

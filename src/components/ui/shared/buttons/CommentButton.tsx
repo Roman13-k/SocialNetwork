@@ -23,6 +23,7 @@ export default function CommentButton({ count, setCommentModal }: CommentButtonP
           alt='comments'
           width={20}
           height={18}
+          style={{ height: "auto", width: "auto" }}
           className='lg:scale-100 scale-80'
         />
       </div>
