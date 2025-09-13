@@ -5,11 +5,11 @@ import MainContainer from "../ui/shared/containers/MainContainer";
 import Comments from "../ui/blocks/comments/Comments";
 import Post from "../ui/blocks/posts/Post";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import P from "../ui/shared/text/P";
 import Link from "next/link";
 import { deletePostById, getPostById } from "@/store/redusers/postsReduser";
 import DeleteDialog from "../ui/shared/dialog/DeleteDialog";
 import PostSkeleton from "../ui/shared/skeletons/PostSkeleton";
+import NotFound from "@/app/not-found";
 
 export default function PostScreen() {
   const params = useParams();
@@ -24,12 +24,8 @@ export default function PostScreen() {
     }
   }, [params.id, user?.id, dispatch]);
 
-  if ((!currentPost && !loading) || !params.id || Array.isArray(params.id))
-    return (
-      <MainContainer className='min-h-[90dvh]'>
-        <P variant={"error"}>Post By Id {params.id} not found</P>
-      </MainContainer>
-    );
+  if ((!currentPost.content && !loading) || !params.id || Array.isArray(params.id))
+    return <NotFound />;
 
   const handleDeletePost = () => {
     dispatch(deletePostById({ postId: currentPost.id, image_url: currentPost.image_url }));
@@ -50,7 +46,7 @@ export default function PostScreen() {
         {loading || userLoading ? (
           <PostSkeleton />
         ) : (
-          <div className='flex flex-col items-start gap-3'>
+          <div className='flex flex-col items-start gap-3 w-full max-w-[650px] mx-auto'>
             <Post post={currentPost} />
             {currentPost?.user?.id === user?.id && (
               <DeleteDialog handleAction={handleDeletePost} trigerText='Delete post' />

@@ -4,12 +4,13 @@ import Message from "./Message";
 import P from "@/components/ui/shared/text/P";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 // import Image from "next/image";
-import { daysBetween } from "@/utils/chatDateFormat";
-import { loadMessages } from "@/store/redusers/messagesReduser";
+import { clearMessages, loadMessages } from "@/store/redusers/messagesReduser";
+import MessageSkeleton from "@/components/ui/shared/skeletons/MessageSkeleton";
+import { messageDateFormat } from "@/utils/dates/messageDateFormat";
 
 interface MessagesProps {
   userId: string | undefined;
-  chatId: string;
+  chatId: string | undefined;
   isToBootom: boolean;
   setIsToBottom: Dispatch<SetStateAction<boolean>>;
 }
@@ -26,9 +27,11 @@ export default function Messages({ userId, chatId, isToBootom, setIsToBottom }: 
   }, [messages, isToBootom]);
 
   useEffect(() => {
-    if (offset === null || loading || error || messages.length !== 0) return;
-    dispatch(loadMessages({ offset, chatId }));
-    setIsToBottom(true);
+    if (messages.length !== 0) dispatch(clearMessages());
+    else if (offset !== null && !loading && !error && chatId) {
+      dispatch(loadMessages({ offset, chatId }));
+      setIsToBottom(true);
+    }
   }, [chatId]);
 
   useEffect(() => {
@@ -37,7 +40,7 @@ export default function Messages({ userId, chatId, isToBootom, setIsToBottom }: 
 
     const handleScroll = () => {
       setIsToBottom(false);
-      if (el.scrollTop < 100 && offset !== null && !loading && !error) {
+      if (el.scrollTop < 100 && offset !== null && !loading && !error && chatId) {
         const prevHeight = el.scrollHeight;
         const prevScrollTop = el.scrollTop;
 
@@ -57,26 +60,12 @@ export default function Messages({ userId, chatId, isToBootom, setIsToBottom }: 
   }, [chatId, offset, loading, error]);
 
   let lastDate = "";
-  const curDate = new Date();
 
   const messagesList = useMemo(() => {
     return (
       <ul className='flex flex-col items-center gap-2 py-5 max-w-[768px] w-full mx-auto min-w-0'>
         {messages.map((message) => {
-          const rafMessageDate = new Date(message.created_at);
-          const diffDays = daysBetween(curDate, rafMessageDate);
-
-          const messageDate =
-            diffDays === 0
-              ? "Today"
-              : diffDays === 1
-              ? "Yesterday"
-              : rafMessageDate.toLocaleDateString("en-US", {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                });
-
+          const messageDate = messageDateFormat(message.created_at);
           const showHeader = messageDate !== lastDate;
           if (showHeader) lastDate = messageDate;
 
@@ -121,7 +110,19 @@ export default function Messages({ userId, chatId, isToBootom, setIsToBottom }: 
     <div
       ref={messagesRef}
       className='h-full flex-1 min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200'>
-      {messagesList}
+      {error ? (
+        <P className='text-center' variant={"error"}>
+          {error.message}
+        </P>
+      ) : (
+        messagesList
+      )}
+      {loading && messages.length === 0 && (
+        <div className='flex flex-col items-start gap-4 max-w-[768px] w-full mx-auto min-w-0'>
+          <MessageSkeleton />
+          <MessageSkeleton />
+        </div>
+      )}
       <div ref={bottomRef} className='block'></div>
     </div>
   );

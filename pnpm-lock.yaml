@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@2toad/profanity':
+        specifier: ^3.2.0
+        version: 3.2.0
       '@hookform/resolvers':
         specifier: ^5.2.1
         version: 5.2.1(react-hook-form@7.62.0(react@19.1.0))
@@ -95,6 +98,10 @@ importers:
         version: 5.9.2
 
 packages:
+
+  '@2toad/profanity@3.2.0':
+    resolution: {integrity: sha512-1wF0F9SXBS8zsn74ZyDKhClSH+5Tupycq2F1x34+/1YKhrq49ejs+imH8/YIS/JwXoj2oUY+KTpoyOxJeNA2mQ==}
+    engines: {node: '>=12'}
 
   '@alloc/quick-lru@5.2.0':
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
@@ -3593,6 +3600,8 @@ packages:
     resolution: {integrity: sha512-rcUUZqlLJgBC33IT3PNMgsCq6TzLQEG/Ei/KTCU0PedSWRMAXoOUN+4t/0H+Q8bdnLPdqUYnvboJT0bn/229qg==}
 
 snapshots:
+
+  '@2toad/profanity@3.2.0': {}
 
   '@alloc/quick-lru@5.2.0': {}
 

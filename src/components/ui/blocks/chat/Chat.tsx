@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from "react";
 import ChatContainer from "../../shared/containers/ChatContainer";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { enterChat, leaveChat } from "@/store/redusers/chatsReduser";
-import { clearMessages, incrOffset, messageReceived } from "@/store/redusers/messagesReduser";
+import { enterChat } from "@/store/redusers/chatsReduser";
+import { incrOffset, messageReceived } from "@/store/redusers/messagesReduser";
 import { supabase } from "@/lib/supabaseClient";
 import Messages from "./messages/Messages";
 import { usePathname } from "next/navigation";
@@ -61,8 +61,6 @@ export default function Chat() {
       .subscribe();
 
     return () => {
-      dispatch(leaveChat());
-      dispatch(clearMessages());
       supabase.removeChannel(channel);
     };
   }, [activeChat, dispatch]);
@@ -73,7 +71,7 @@ export default function Chat() {
       className='min-w-0 w-full'>
       <Messages
         userId={userId}
-        chatId={chatId}
+        chatId={activeChat?.id}
         isToBootom={isToBootom}
         setIsToBottom={setIsToBottom}
       />

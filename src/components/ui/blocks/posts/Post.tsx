@@ -1,6 +1,6 @@
 "use client";
 import { PostInterface } from "@/interfaces/post";
-import { postDateFormat } from "@/utils/postDateFormat";
+import { postDateFormat } from "@/utils/dates/postDateFormat";
 import Image from "next/image";
 import React, { useState } from "react";
 import LikeButton from "../../shared/buttons/LikeButton";
@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { createNewComment } from "@/store/redusers/commentsReduser";
 import P from "../../shared/text/P";
 import { PostsType, updateCommentsCout } from "@/store/redusers/postsReduser";
+import { profanity } from "@/lib/profanity";
 
 export default function Post({ post, type }: { post: PostInterface; type?: PostsType }) {
   const [commentModal, setCommentModal] = useState(false);
@@ -51,7 +52,7 @@ export default function Post({ post, type }: { post: PostInterface; type?: Posts
               <P variant={"secondary"}>· {postDateFormat(post?.created_at)}</P>
             </div>
 
-            <P variant={"secondary"}>{post?.content}</P>
+            <P variant={"secondary"}>{profanity.censor(post?.content)}</P>
 
             {post?.image_url && post?.image_url?.length > 0 && (
               <div

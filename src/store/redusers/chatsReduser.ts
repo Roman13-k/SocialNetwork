@@ -86,6 +86,7 @@ export const chatsSlice = createSlice({
     },
     leaveChat: (state) => {
       state.activeChat = null;
+      state.error = null;
     },
   },
   extraReducers: (builder) => {

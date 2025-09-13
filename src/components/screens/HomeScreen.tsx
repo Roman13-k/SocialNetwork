@@ -12,7 +12,7 @@ import { supabase } from "@/lib/supabaseClient";
 export default function HomeScreen() {
   const [postModal, setPostModal] = useState(false);
   const userId = useAppSelector((state) => state.user.user?.id);
-  const error = useAppSelector((state) => state.posts.error);
+  const { error, loading } = useAppSelector((state) => state.posts);
   const dispatch = useAppDispatch();
 
   async function uploadPostsImages(postId: string, files?: File[]): Promise<string[] | undefined> {
@@ -38,8 +38,8 @@ export default function HomeScreen() {
     dispatch(setLoading());
     const postId = crypto.randomUUID();
     const image_url = await uploadPostsImages(postId, files);
-    dispatch(createNewPost({ content, userId, image_url, postId }));
-    if (!error) setPostModal(false);
+    await dispatch(createNewPost({ content, userId, image_url, postId }));
+    if (!error && !loading) setPostModal(false);
   };
 
   return (

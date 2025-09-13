@@ -1,7 +1,7 @@
 import { CommentInterface } from "@/interfaces/comment";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { deleteCommentById } from "@/store/redusers/commentsReduser";
-import { postDateFormat } from "@/utils/postDateFormat";
+import { postDateFormat } from "@/utils/dates/postDateFormat";
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
 import React from "react";
@@ -9,6 +9,7 @@ import DeleteDialog from "../../shared/dialog/DeleteDialog";
 import P from "../../shared/text/P";
 import Link from "next/link";
 import { updateCommentsCout } from "@/store/redusers/postsReduser";
+import { profanity } from "@/lib/profanity";
 
 export default function Comment({ comment }: { comment: CommentInterface }) {
   const dispatch = useAppDispatch();
@@ -49,7 +50,7 @@ export default function Comment({ comment }: { comment: CommentInterface }) {
           )}
         </div>
 
-        <P variant={"secondary"}>{comment.content}</P>
+        <P variant={"secondary"}>{profanity.censor(comment?.content)}</P>
       </div>
     </li>
   );

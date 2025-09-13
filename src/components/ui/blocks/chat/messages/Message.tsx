@@ -1,7 +1,7 @@
 "use client";
 import P from "@/components/ui/shared/text/P";
 import { MessageInterface } from "@/interfaces/message";
-import { chatDateFormat, chatTitleDateFormat } from "@/utils/chatDateFormat";
+import { chatDateFormat, chatTitleDateFormat } from "@/utils/dates/chatDateFormat";
 import React from "react";
 
 interface MessageProps {

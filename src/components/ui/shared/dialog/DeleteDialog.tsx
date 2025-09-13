@@ -17,6 +17,7 @@ interface DeleteDialogProps {
   triger?: React.ReactNode;
   trigerText?: string;
   description?: string;
+  className?: string;
 }
 
 export default function DeleteDialog({
@@ -24,10 +25,11 @@ export default function DeleteDialog({
   trigerText = "Exit",
   description = "This action cannot be undone",
   triger,
+  className,
 }: DeleteDialogProps) {
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
+      <AlertDialogTrigger className={className ?? ""} asChild>
         {triger ? (
           triger
         ) : (

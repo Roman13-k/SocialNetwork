@@ -48,6 +48,7 @@ export const messagesSlice = createSlice({
 
     clearMessages: (state) => {
       state.messages = [];
+      state.offset = 0;
     },
     incrOffset: (state) => {
       if (state.offset !== null) state.offset += 1;
